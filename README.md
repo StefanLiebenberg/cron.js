@@ -47,4 +47,4 @@ Schedule:
 ---
 
  Sec Min Hour Day Month Weekday
- *   *   *    *   *     *
+ \*  \*  \*   \*  \*    \*
