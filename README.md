@@ -1,6 +1,6 @@
-# scheduling with cron.js
+# cron.js
 
-a javascript job scheduler inspired by cron. 
+_a javascript job scheduler inspired by cron._
 
 * Homepage: http://stefanliebenberg.github.com/cron.js/  
 * Contact: siga.fredo@gmail.com  
@@ -30,7 +30,7 @@ These files should be there:
   *  cron.compiled.js - experimental
 
 
-#Make Script:
+## Make script:
 
 
 Creates the cron.js file:
@@ -78,16 +78,17 @@ Crontab.stop();
 ```
 
 
-##Syntax:
+## Syntax:
 
 
-The General Syntax looks like this:
+The general syntax looks like this:
+
 ```javascript
 // Sec Min Hour Day Month Weekday  
 // *  *    *    *   *     *        
 ```
 
-###Seconds:
+### Seconds:
 
 you can generate your own cronspec object with
 
