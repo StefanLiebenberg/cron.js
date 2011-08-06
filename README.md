@@ -88,7 +88,10 @@ The general syntax looks like this:
 // *  *    *    *   *     *        
 ```
 
-### Seconds:
+### Ranges
+  Ranges are two numbers seperated with a "-", eg. `10-30` would indicated all numbers between and including 10 to 30.
+  
+  
 
 you can generate your own cronspec object with
 
