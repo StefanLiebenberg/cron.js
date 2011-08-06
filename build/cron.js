@@ -1,10 +1,3 @@
-// ==ClosureCompiler==
-// @compilation_level ADVANCED_OPTIMIZATIONS
-// @js_externs CronSpec
-// ==/ClosureCompiler==
-
-
-
 // These extentions are required for the interals of cron.js to function.
 Date.prototype.addTime = function ( time ) {
   this.setTime( this.getTime() + time );
@@ -45,8 +38,8 @@ Array.prototype.uniq = function () {
  * 
  */
 
-//@define CronSpec
-var CronSpec = new function () {
+
+window['CronSpec'] = new function () {
    
  function Range( from, to ) {
    this.from = from; this.to = to;
@@ -181,13 +174,26 @@ var CronSpec = new function () {
  
  Months.parsers.push( alias_parser );
  Weekdays.parsers.push( alias_parser );
+ 
+ var aliases = {
+   "@second"     : "* * * * * *",   //on every second
+   "@minute"     : "0 * * * * *",   //at x:00 for every minute x
+   "@halfminute" : "0,30 * * * * *",//at x:00 and x:30 for every minute x
+   "@hour"       : "0 0 * * * *",   //at x:00:00 for every hour x
+   "@halfhour"   : "0 0,30 * * *",  //at x:00:00 and x:30:00 for every hour x
+   "@daily"      : "0 0 0 * * *",   //at midnight of every day
+   "@monthly"    : "0 0 0 1 * *",   //at the first of every month, 00:00:00
+   "@yearly"     : "0 0 0 1 1 *",   //at 1Jan 00:00:00 every year
+   "@weekly"     : "0 0 0 * * 1",   //on sunday 00:00:00 every week
+   "@weekday"    : "0 0 0 * * 2-6"  //midnight on every weekday
+ };
 
  this.parse = function ( spec ) {
    
    spec = spec.trim( " " )
    
-   if( spec in this.aliases ) {
-     spec = this.aliases[spec];
+   if( spec in aliases ) {
+     spec = aliases[spec];
    };
    
    var parts = spec.trim().split(" ");
@@ -357,27 +363,16 @@ var CronSpec = new function () {
    return next;
  }
  
- this.aliases = {
-   "@second"     : "* * * * * *",   //on every second
-   "@minute"     : "0 * * * * *",   //at x:00 for every minute x
-   "@halfminute" : "0,30 * * * * *",//at x:00 and x:30 for every minute x
-   "@hour"       : "0 0 * * * *",   //at x:00:00 for every hour x
-   "@halfhour"   : "0 0,30 * * *",  //at x:00:00 and x:30:00 for every hour x
-   "@daily"      : "0 0 0 * * *",   //at midnight of every day
-   "@monthly"    : "0 0 0 1 * *",   //at the first of every month, 00:00:00
-   "@yearly"     : "0 0 0 1 1 *",   //at 1Jan 00:00:00 every year
-   "@weekly"     : "0 0 0 * * 1",   //on sunday 00:00:00 every week
-   "@weekday"    : "0 0 0 * * 2-6"  //midnight on every weekday
- };
+
  
  return;
 };
-
 function Cron ( spec, job ) {
-  this.cronspec  = CronSpec.parse(spec);
-  this.job       = job;
-  this.last_at   = null;
-  this.getNextAt();
+  var cron = this;
+  cron.cronspec  = CronSpec.parse(spec);
+  cron.job       = job;
+  cron.last_at   = null;
+  cron.getNextAt();
 };
 
 Cron.prototype = {
@@ -402,7 +397,6 @@ Cron.prototype = {
     this.getNextAt();
   }
 };
-
 var Crontab = new function () {
   // ensure singleton;
   if( this.constructor.instance ) return this.constructor.instance;
@@ -455,4 +449,3 @@ var Crontab = new function () {
     };
   };
 };
-
