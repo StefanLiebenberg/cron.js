@@ -40,10 +40,11 @@ Now add the cron to the Crontab:
 Crontab.add( cronjob );
 ```
     
-Start the Crontab with Crontab.start() and stop it with Crontab.stop();
+Start the Crontab with `Crontab.start()` and stop it with `Crontab.stop()`;
 
 
 Schedule:
 ---
 
-The Schedule format is quite close te normal cron usage with a few minor differences. Firstly, cron.js has a seconds field as well, 
+ Sec Min Hour Day Month Weekday
+ *   *   *    *   *     *
