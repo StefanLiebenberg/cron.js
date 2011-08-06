@@ -46,7 +46,23 @@ Start the Crontab with `Crontab.start()` and stop it with `Crontab.stop()`;
 Schedule:
 ---
 
+
 ```javascript
 // Sec Min Hour Day Month Weekday  
-// *  *    *    *   *     *
+// *  *    *    *   *     *        
+```
+
+you can generate your own cronspec object with
+
+```javascript
+CronSpec.parse( schedule )
+```
+
+but you should just use a schedule to specify the time interval of a cron job, like so:
+
+```javascript
+var schedule = "0 0 0 * * 2-6"; # 00:00:00 on every weeday
+new Cron( schedule, function () {
+  // do stuff here
+});
 ```
