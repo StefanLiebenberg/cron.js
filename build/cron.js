@@ -368,10 +368,11 @@ window['CronSpec'] = new function () {
  return;
 };
 function Cron ( spec, job ) {
-  this.cronspec  = CronSpec.parse(spec);
-  this.job       = job;
-  this.last_at   = null;
-  this.getNextAt();
+  var cron = this;
+  cron.cronspec  = CronSpec.parse(spec);
+  cron.job       = job;
+  cron.last_at   = null;
+  cron.getNextAt();
 };
 
 Cron.prototype = {
