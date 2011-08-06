@@ -1,0 +1,7 @@
+Usage
+
+Usage is pretty basic. You create a crontab:
+
+    var a = new Crontab
+    
+    
