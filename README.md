@@ -2,9 +2,9 @@
 
 a javascript job scheduler inspired by cron. 
 
-Homepage: http://stefanliebenberg.github.com/cron.js/
-Contact: siga.fredo@gmail.com
-Licensee: http://creativecommons.org/licenses/by/3.0/
+Homepage: http://stefanliebenberg.github.com/cron.js/  
+Contact: siga.fredo@gmail.com  
+Licensee: http://creativecommons.org/licenses/by/3.0/  
 
 
 ##About
