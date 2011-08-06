@@ -1,3 +1,10 @@
+// ==ClosureCompiler==
+// @compilation_level ADVANCED_OPTIMIZATIONS
+// @js_externs CronSpec
+// ==/ClosureCompiler==
+
+
+
 // These extentions are required for the interals of cron.js to function.
 Date.prototype.addTime = function ( time ) {
   this.setTime( this.getTime() + time );
@@ -38,7 +45,7 @@ Array.prototype.uniq = function () {
  * 
  */
 
-
+//@define CronSpec
 var CronSpec = new function () {
    
  function Range( from, to ) {
@@ -365,6 +372,7 @@ var CronSpec = new function () {
  
  return;
 };
+
 function Cron ( spec, job ) {
   this.cronspec  = CronSpec.parse(spec);
   this.job       = job;
@@ -394,6 +402,7 @@ Cron.prototype = {
     this.getNextAt();
   }
 };
+
 var Crontab = new function () {
   // ensure singleton;
   if( this.constructor.instance ) return this.constructor.instance;
@@ -446,3 +455,4 @@ var Crontab = new function () {
     };
   };
 };
+
