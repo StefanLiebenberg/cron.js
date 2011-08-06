@@ -21,7 +21,7 @@ make;
 Getting the Build File
 ---
 
-grap the file from build/cron.js
+grab the file from build/cron.js
 
 Usage:
 ---
@@ -61,7 +61,7 @@ CronSpec.parse( schedule )
 but you should just use a schedule to specify the time interval of a cron job, like so:
 
 ```javascript
-var schedule = "0 0 0 * * 2-6"; # 00:00:00 on every weeday
+var schedule = "0 0 0 * * 2-6"; // 00:00:00 on every weeday
 new Cron( schedule, function () {
   // do stuff here
 });
