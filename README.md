@@ -103,8 +103,8 @@ Whereas **hours** will only accept numbers between 0-23;
 * **minutes**  : 0 to 59
 * **hours**    : 0 to 23
 * **days**     : 1 to 31
-* **months**   : 1 to 12
-* **weekdays** : 1 to 7
+* **months**   : 1 to 12 ( jan, feb, mar and so forth are also supported )
+* **weekdays** : 1 to 7  ( mon, tue, wed, thu and so forth are also supported )
 
 ### Ranges
   Ranges are two numbers seperated with a "-", and they indicate all numbers from one to the other. 
@@ -117,15 +117,8 @@ Whereas **hours** will only accept numbers between 0-23;
 ### Lists
   Lists are either ranges, numbers, or intervals seperated by commas. eg. `10-30,23,30-40/2`;
 
- 
 
-you can generate your own cronspec object with
-
-```javascript
-CronSpec.parse( schedule )
-```
-
-but you should just use a schedule to specify the time interval of a cron job, like so:
+You should combind these six columns to specify a interval at which a job object is to be run:
 
 ```javascript
 var schedule = "0 0 0 * * 2-6"; // 00:00:00 on every weeday
