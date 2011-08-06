@@ -99,7 +99,12 @@ For each column, the values could be specific numbers, ranges, intervals or all 
 Each field has different numbers that are allowed, for example **seconds** and **minutes** will accept any number between 0 and 59. 
 Whereas **hours** will only accept numbers between 0-23;
 
-
+* **seconds**  : 0 to 59
+* **minutes**  : 0 to 59
+* **hours**    : 0 to 23
+* **days**     : 1 to 31
+* **months**   : 1 to 12
+* **weekdays** : 1 to 7
 
 
 ### Lists
