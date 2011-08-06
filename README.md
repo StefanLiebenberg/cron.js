@@ -6,7 +6,7 @@ a JavaScript Job Scheduler
 ##About
 
 
-*cron.js* is a cron scheduler for JavaScript. It allows you to run jobs at specific intervals, defined by standard cron syntax. These intervals range from specific months to every second.
+**cron.js** is a cron scheduler for JavaScript. It allows you to run jobs at specific intervals, defined by standard cron syntax. These intervals range from specific months to every second.
 
 
 #Notice:
