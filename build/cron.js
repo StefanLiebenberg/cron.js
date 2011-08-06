@@ -399,10 +399,10 @@ var Crontab = new function () {
   if( this.constructor.instance ) return this.constructor.instance;
   this.constructor.instance = this;
   
-  var jobs = [];
+  var jobs = this.jobs = [];
   
   this.add = function( job ) {
-    this.jobs.push( job );
+    jobs.push( job );
     if( this.running ) {
       this.next();
     };
@@ -413,7 +413,7 @@ var Crontab = new function () {
   };
   
   this.next = function () {
-    if( this.running || this.storedTimeout || jobs.length ) {
+    if( !this.running || this.storedTimeout || !jobs.length ) {
       return;
     };
     
