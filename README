@@ -13,8 +13,10 @@ Building
 
 Just run the makefile.
 
-    cd /path/to/cron.js;
-    make;
+```shell
+cd /path/to/cron.js;
+make;
+```
 
 Getting the Build File
 ---
@@ -26,13 +28,17 @@ Usage:
 
 Usage is pretty basic. You create a new CronJob with new Cron( schedule, job );
 
-    var cronjob = new Cron( "@hour", function () {
-       // task goes here
-    });
+```javascript
+var cronjob = new Cron( "@hour", function () {
+   // task goes here
+});
+```
     
 Now add the cron to the Crontab:
 
-    Crontab.add( cronjob );
+```javascript
+Crontab.add( cronjob );
+```
     
 Start the Crontab with Crontab.start() and stop it with Crontab.stop();
 
