@@ -1,25 +1,23 @@
-#cron.js
+# cron.js
 
 a javascript job scheduler inspired by cron. 
 
-Homepage: http://stefanliebenberg.github.com/cron.js/  
-Contact: siga.fredo@gmail.com  
-Licensee: http://creativecommons.org/licenses/by/3.0/  
+* Homepage: http://stefanliebenberg.github.com/cron.js/  
+* Contact: siga.fredo@gmail.com  
+* Licensee: http://creativecommons.org/licenses/by/3.0/  
 
-
-##About
-
-
-**cron.js** is a cron scheduler for JavaScript. It allows you to run jobs at specific intervals, defined by standard cron syntax. These intervals range from specific months to every second.
-
-
-##Notice:
+## notice:
 
 _This documentations is incomplete, send me a message on github if you have any questions. Also see the examples folder for some usage examples._
 
 
-##Getting the code:
+## About
 
+**cron.js** is a cron scheduler for JavaScript. It allows you to run jobs at specific intervals, defined by standard cron syntax. These intervals range from specific months to every second.
+
+
+## Getting the code:
+ 
 
 Grab one of the files in that directory:
 
