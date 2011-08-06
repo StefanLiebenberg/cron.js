@@ -1,9 +1,25 @@
-Notice:
----
-This documentations is incomplete, send me a message on github if you have any questions.
-
 About
 ---
+
+cron.js is a cron schedular for JavaScript. The biggest difference in cron.js is that you can schedule events on a per second interval.
+
+Notice:
+---
+
+This documentations is incomplete, send me a message on github if you have any questions. Also see the output the examples folder.
+
+Building
+---
+
+Just run the makefile.
+
+    cd /path/to/cron.js;
+    make;
+
+Getting the Build File
+---
+
+grap the file from build/cron.js
 
 Usage:
 ---
