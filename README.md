@@ -32,18 +32,24 @@ These files should be there:
 
 ## Make script:
 
-
-Creates the cron.js file:
+Create the cron.js file:
 
 ```shell
 make
 ```
 
-Creates the cron.min.js and cron.compiled.js files
+Create the cron.min.js file:
+
+```shell
+make minify
+```
+
+Create the cron.compiled.js files
 
 ```shell
 make compile
 ```
+
 
 Usage:
 ---
