@@ -106,19 +106,18 @@ Whereas **hours** will only accept numbers between 0-23;
 * **months**   : 1 to 12
 * **weekdays** : 1 to 7
 
+### Ranges
+  Ranges are two numbers seperated with a "-", and they indicate all numbers from one to the other. 
+  eg. `10-30` would indicated all numbers between and including 10 to 30.
+  
+### Interval
+  A interval is a range and a number seperated by "/". The range specifies the group of values, and number speciefies every nth value to take from that range.  
+  _eg. `0-10/2` would indicate every 2nd number from 0 to 10, therefore 0,2,4,6,8,10_
 
 ### Lists
- Lists are either ranges, numbers, or intervals seperated by commas. eg. `10-30,23,30-40/2`;
+  Lists are either ranges, numbers, or intervals seperated by commas. eg. `10-30,23,30-40/2`;
 
-### Ranges
-  Ranges are two numbers seperated with a "-", eg. `10-30` would indicated all numbers between and including 10 to 30.
-
-### Interval
-  A interval is a range and a number seperated by "/". The range specifies the group of values, and number speciefies every nth value to take from that range.
-
-
-  
-  
+ 
 
 you can generate your own cronspec object with
 
