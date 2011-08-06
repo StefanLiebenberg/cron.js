@@ -88,8 +88,30 @@ The general syntax looks like this:
 // *  *    *    *   *     *        
 ```
 
+There are six columns to a cron schedule: **seconds, minutes, hours, days, months, weekdays**.
+You specify specific values for each of these columns so that scheduler can calculate when to run a given job. 
+
+For each column, the values could be specific numbers, ranges, intervals or all of these combined in a list. 
+
+
+### Specific Numbers:
+
+Each field has different numbers that are allowed, for example **seconds** and **minutes** will accept any number between 0 and 59. 
+Whereas **hours** will only accept numbers between 0-23;
+
+
+
+
+### Lists
+ Lists are either ranges, numbers, or intervals seperated by commas. eg. `10-30,23,30-40/2`;
+
 ### Ranges
   Ranges are two numbers seperated with a "-", eg. `10-30` would indicated all numbers between and including 10 to 30.
+
+### Interval
+  A interval is a range and a number seperated by "/". The range specifies the group of values, and number speciefies every nth value to take from that range.
+
+
   
   
 
