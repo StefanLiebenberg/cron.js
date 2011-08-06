@@ -1,3 +1,4 @@
+// These extentions are required for the interals of cron.js to function.
 Date.prototype.addTime = function ( time ) {
   this.setTime( this.getTime() + time );
 };
@@ -11,7 +12,6 @@ Date.prototype.addDays = function ( days ) {
   this.setDate( this.getDate() + days );
 };
 Date.prototype.addMonths = function ( months ) {
-  // javascript internals takes care of rolling the year over;
   this.setMonth( this.getMonth() + months ); 
 };
 
@@ -394,28 +394,34 @@ Cron.prototype = {
     this.getNextAt();
   }
 };
-
-
-
-var Crontab = {
-  jobs: [],
-  add: function( job ) {
-    this.jobs.push( job );
+var Crontab = new function () {
+  // ensure singleton;
+  if( this.constructor.instance ) return this.constructor.instance;
+  this.constructor.instance = this;
+  
+  var jobs = this.jobs = [];
+  
+  this.add = function( job ) {
+    jobs.push( job );
     if( this.running ) {
       this.next();
     };
-  },
-  next: function () {
-    
-    if( !this.running || this.storedTimeout || !this.jobs.length) {
+  };
+  
+  this.remove = function ( job ) {
+    // todo, add remove code
+  };
+  
+  this.next = function () {
+    if( !this.running || this.storedTimeout || !jobs.length ) {
       return;
     };
     
-    var job = this.jobs[0];
-    for( var i = 1, l = this.jobs.length; i < l; i++ ) {
-      if( this.jobs[i].next_at < job.next_at ) {
-        job = this.jobs[i];
-      };
+    var job = jobs[0];
+    for( var i = 1, l = jobs.length; i < l; i++ ) {
+      if( jobs[i].next_at < job.next_at ) {
+        job = jobs[i];
+      }
     };
     
     var self = this;
@@ -423,21 +429,20 @@ var Crontab = {
       job.run();
       delete self.storedTimeout;
       self.next();
-    }, job.getTimeout())
-    
-  },
+    }, job.getTimeout() );
+  };
   
-  start: function () {
+  this.start = function () {
     if(! this.running ) {
       this.running = true;
       this.next();
     }
-  },
-  stop: function () {
+  };
+  this.stop = function () {
     if(this.running ) {
       this.running = false;
       clearTimeout( this.storedTimeout );
       delete this.storedTimeout;
     };
-  }
+  };
 };
