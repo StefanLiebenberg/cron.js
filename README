@@ -1,7 +1,27 @@
-Usage
+Notice:
+---
+This documentations is incomplete, send me a message on github if you have any questions.
 
-Usage is pretty basic. You create a crontab:
+About
+---
 
-    var a = new Crontab
+Usage:
+---
+
+Usage is pretty basic. You create a new CronJob with new Cron( schedule, job );
+
+    var cronjob = new Cron( "@hour", function () {
+       // task goes here
+    });
     
+Now add the cron to the Crontab:
+
+    Crontab.add( cronjob );
     
+Start the Crontab with Crontab.start() and stop it with Crontab.stop();
+
+
+Schedule:
+---
+
+The Schedule format is quite close te normal cron usage with a few minor differences. Firstly, cron.js has a seconds field as well, 
