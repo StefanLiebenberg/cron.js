@@ -1,4 +1,4 @@
-# cron.js
+# scheduling with cron.js
 
 a javascript job scheduler inspired by cron. 
 
