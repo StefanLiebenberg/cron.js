@@ -58,7 +58,7 @@ jQuery( document ).ready( function () {
   };
   
   Crontab.start();
-  Crontab.add( new Cron("* * * * * *", doTest ) )
+  Crontab.add( new Cron("*/5 * * * * *", doTest ) )
   
   
 });
@@ -67,7 +67,7 @@ jQuery( document ).ready( function () {
   <body>
     <b>About this Example:</b>
     <p>
-      This example demonstrates the speed at which cron.js can calculate upcoming dates. We take a list of valid interval specifications and calculate the next 100 dates on each interval. We then print out the millisecond time it took to calculate those dates. This test is repeated every second using <b>cron.js</b>
+      This example demonstrates the speed at which cron.js can calculate upcoming dates. We take a list of valid interval specifications and calculate the next 100 dates on each interval. We then print out the millisecond time it took to calculate those dates. This test is repeated every 5 seconds using <b>cron.js</b>
     </p>
     
     <b>The Example Script:</b>
