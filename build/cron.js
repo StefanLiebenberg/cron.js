@@ -393,7 +393,8 @@ Cron.prototype = {
   },
   run: function () {
     this.last_at = new Date();
-    this.job.apply( this );
+    // execute the job async;
+    setTimeout(this.job,0);
     this.getNextAt();
   }
 };
@@ -425,7 +426,7 @@ CronScheduler.prototype = {
   stop: function () {
     if( this.running ) {
       this.running = false;
-      clearTimeot( this.storedTimeout );
+      clearTimeout( this.storedTimeout );
       delete this.storedTimeout;
     };
   },
