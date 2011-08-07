@@ -426,7 +426,7 @@ CronScheduler.prototype = {
   stop: function () {
     if( this.running ) {
       this.running = false;
-      clearTimeot( this.storedTimeout );
+      clearTimeout( this.storedTimeout );
       delete this.storedTimeout;
     };
   },
