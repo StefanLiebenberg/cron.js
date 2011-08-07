@@ -2,7 +2,7 @@
   <head>
     <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
     <script src='../build/cron.compiled.js'></script>
-    <script>
+    <script id="script">
 jQuery( document ).ready( function () {  
   function test( spec, amount ) {
     var cron = CronSpec.parse( spec );
@@ -13,7 +13,6 @@ jQuery( document ).ready( function () {
     };
     return amount + " x SPEC["+spec+"] = " + ( new Date() - now );
   };
-
 
   var start = new Date();
   var specs = [
@@ -28,9 +27,7 @@ jQuery( document ).ready( function () {
     "0 0 0 29 feb sun,sat",
     "0 0 0 29 feb mon-fri"
   ];
-
-
-
+  
   var result = jQuery( "#time-result" );
   for( var i = 0, l = specs.length; i < l; i++ ) {
     result.append( test( specs[i], 100 ) + "<br/>")  
@@ -41,7 +38,17 @@ jQuery( document ).ready( function () {
     </script>
   </head>
   <body>
-    Result:
+    <b>About this Example:</b>
+    <p>
+      This example demonstrates the speed at which cron.js can calculate upcoming dates. We take a list of valid interval specifications and calculate the next 100 dates on each interval. We then print out the millisecond time it took to calculate those dates.
+    </p>
+    
+    
+    <b>The Example Script:</b>
+<pre><code><script>document.write( jQuery( "#script" ).html() )</script></code></pre>
+      
+    
+    <b>Result:</b>
     <div id="time-result"> </div>
   </body>
 </html>
