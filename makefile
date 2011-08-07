@@ -16,4 +16,4 @@ build/cron.compiled.js : build/cron.js
 compile: build/cron.compiled.js
 minify: build/cron.min.js
 
-more: compile minify
+all: main compile minify
