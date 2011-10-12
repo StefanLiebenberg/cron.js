@@ -8,9 +8,17 @@ goog.provide('sage.util.Range');
  * @param {number} to the end point.
  */
 sage.util.Range = function(from, to) {
+
+  if (from > to) {
+    throw new Error('sage.util.Range: from is larger than to');
+  }
+
+  /** @type {number} */
   this.from = from;
+  /** @type {number} */
   this.to = to;
-  this.length = to - from;
+  /** @type {number} */
+  this.length = 1 + to - from;
 };
 
 
@@ -27,15 +35,63 @@ sage.util.Range.prototype.valueAt = function(index) {
 
 
 /**
- * @return {Array} returns an array of all values.
+ * @param {number} value a value that might be within range.
+ * @return {number} returns the index of value.
  */
-sage.util.Range.prototype.getValues = function() {
-  var length, result, from;
-  length = this.length;
-  from = this.from;
+sage.util.Range.prototype.valueAt = function(value) {
+  var index = -1;
+
+  if (value >= this.from && value <= this.to) {
+    index = value - this.from;
+  }
+
+  return index;
+};
+
+
+/**
+ * @param {?number} from the start point.
+ * @param {?number} to the end point.
+ * @return {Array.<number>} returns an array of all values.
+ */
+sage.util.Range.prototype.getValues = function(from, to) {
+
+  if (arguments.length !== 2) {
+    to = this.to;
+    if (arguments.length === 0) {
+      from = this.from;
+    }
+  }
+
+  return this.getValuesInternal(from, to);
+};
+
+
+/**
+ * @param {number} from the start point.
+ * @param {number} to the end point.
+ * @return {Array.<number>} returns an array of all values.
+ */
+sage.util.Range.prototype.getValuesInternal = function(from, to) {
+  var length;
+  if (from > to || from < this.from || to > this.to) {
+    var str = 'sage.util.Range: ';
+    str += 'values are out of range';
+    throw new Error(str);
+  }
+
+  length = /** @type {number} */ 1 + to - from;
   result = new Array(length);
-  while (length--) {
+  if (length > 0) while (length--) {
     result[length] = from + length;
   }
   return result;
+};
+
+
+/**
+ * @return {string} returns the string representation of this range;.
+ */
+sage.util.Range.prototype.toString = function() {
+  return 'Range[' + this.from + '..' + this.to + ']';
 };

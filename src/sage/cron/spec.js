@@ -1,11 +1,11 @@
 goog.provide('sage.cron.Spec');
-goog.require('sage.cron.DayParser');
-goog.require('sage.cron.HourParser');
-goog.require('sage.cron.MinuteParser');
-goog.require('sage.cron.MonthParser');
-goog.require('sage.cron.SecondParser');
-goog.require('sage.cron.WeekdayParser');
-goog.require('sage.util.RangeParser');
+goog.require('sage.cron.SpecDayParser');
+goog.require('sage.cron.SpecHourParser');
+goog.require('sage.cron.SpecMinuteParser');
+goog.require('sage.cron.SpecMonthParser');
+goog.require('sage.cron.SpecSecondParser');
+goog.require('sage.cron.SpecWeekdayParser');
+goog.require('sage.util.SpecRangeParser');
 goog.require('sage.util.date');
 
 

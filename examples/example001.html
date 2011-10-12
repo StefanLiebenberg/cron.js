@@ -1,42 +1,7 @@
 <html>
   <head>
-    <script src='../build/cron.compiled.js'></script>
-    <script>
-      Crontab.start();
-      
-      Crontab.add(new Cron( "@second" , function () {
-        console.log( new Date().getSeconds() )
-        console.log( "This message should run every second" )
-      }));
-      
-      Crontab.add( new Cron( "*/5 * * * * *", function () {
-        console.log( "This message should run every 5 seconds" );
-      }));
-      
-      Crontab.add( new Cron( "0-5,10-20,40-59/2 * * * * *", function () { 
-        console.log( "This message will on seconds 0 to 5, then on 10 to 20 and then 2nd second after 40 " )
-      }));
-    </script>
+    <script src='../build/cron.src.js'></script>
   </head>
   <body>
-    <b>For this example you will need a browser that supports console.log. Please take a look there at the output</b>
-    <div>
-<pre><code>
-Crontab.start();
-
-Crontab.add(new Cron( "@second" , function () {
-  console.log( new Date().getSeconds() )
-  console.log( "This message should run every second" )
-}));
-
-Crontab.add( new Cron( "*/5 * * * * *", function () {
-  console.log( "This message should run every 5 seconds" );
-}));
-
-Crontab.add( new Cron( "0-5,10-20,40-59/2 * * * * *", function () { 
-  console.log( "This message will on seconds 0 to 5, then on 10 to 20 and then 2nd second after 40 " )
-}));
-</code></pre>
-    </div>
   </body>
 </html>

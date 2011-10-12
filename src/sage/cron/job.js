@@ -4,8 +4,8 @@ goog.provide('sage.cron.Job');
 
 /**
  * @constructor
- * @param {string|sage.cron.Spec} spec the interval specification.
- * @param {Function} block the function associated with this cron.
+ * @param {!string|!sage.cron.Spec} spec the interval specification.
+ * @param {!Function} block the function associated with this cron.
  */
 sage.cron.Job = function(spec, block) {
   if (typeof spec === 'string') {
@@ -13,13 +13,13 @@ sage.cron.Job = function(spec, block) {
   }
 
   /**
-   * @type {sage.cron.Spec}
+   * @type {!sage.cron.Spec}
    * @private
    */
-  this.cronspec = spec;
+  this.cronspec_ = spec;
 
   /**
-   * @type {Function}
+   * @type {!Function}
    * @private
    */
   this.block_ = block;

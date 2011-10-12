@@ -8,28 +8,37 @@ goog.require('sage.util.array');
 /**
  * @constructor
  * @extends {sage.util.Parser}
+ * @param {number} from the start point.
+ * @param {number} to the end point.
  */
 sage.util.RangeParser = function(from, to) {
+  /** @type {sage.util.Range} */
   this.range = new sage.util.Range(from, to);
+
+  /** @type {Array.<sage.util.StringParser>} */
   this.parsers = [];
 };
 goog.inherits(sage.util.RangeParser, sage.util.Parser);
 
 
 /**
- * @param {sage.cron.CronSpec} spec the spec.
+ * @param {string} string a range string to parse.
+ * @return {Array} returns an array of parsed values.
  */
-sage.util.RangeParser.prototype.parse = function(spec) {
-  /** @type {Array} */
-  var result = [];
-  for (var i = 0, l = this.parsers.length; i < l; i++) {
-    if (this.parsers[i].test(spec)) {
-      var result = this.parsers[i]
-        .parse(spec, this);
-      sage.util.array(result);
-      result.sort(function(a,b) {return a - b});
-      return result;
+sage.util.RangeParser.prototype.parseInternal = function(string) {
+
+  var result = /** @type {Array} */ [];
+  var len = /** @type {number} */ this.parsers.length;
+  var parser, result;
+
+  for (var i = 0; i < len; i++) {
+    parser = /** @type {sage.util.Parser} */ this.parsers[i];
+    if (parser.test(string)) {
+      result = parser.parse(string, this);
+      sage.util.array.uniq(result);
+      result.sort(function(a, b) {return a - b});
+      break;
     }
   }
-  return [];
+  return result;
 };
