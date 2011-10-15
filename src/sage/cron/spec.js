@@ -176,7 +176,7 @@ sage.cron.Spec.prototype.next = function(date) {
 
     count = next.getMonth() + 1;
     if (do_months && this.months.indexOf(count) == -1) {
-      month_flag = true;
+      flag = true;
       for (var i = 0; i < len_months; i++) {
         if (this.months[i] >= count) {
           next.setMonth(this.months[i] - 1);
@@ -202,7 +202,8 @@ sage.cron.Spec.prototype.next = function(date) {
 
 
 /**
- * @enum {string}
+ * @type {Object.<string>}
+ * @const
  * @private
  */
 sage.cron.Spec.aliases_ = {

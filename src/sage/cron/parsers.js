@@ -33,7 +33,10 @@ sage.cron.SpecMonthParser =
     new sage.cron.AliasSpecParser(1, 12, '(([0]?[1-9])|([1][0-2]))');
 
 
-/** @type {Object.<number>} */
+/**
+ * @const
+ * @type {Object.<number>}
+ */
 sage.cron.SpecMonthParser.aliases = {
   'jan': 1,
   'feb': 2,
@@ -55,7 +58,10 @@ sage.cron.SpecWeekdayParser =
     new sage.cron.AliasSpecParser(1, 7, '([0]?[1-7])');
 
 
-/** @type {Object.<number>} */
+/**
+ * @const
+ * @type {Object.<number>}
+ */
 sage.cron.SpecWeekdayParser.aliases = {
   'sun': 1,
   'mon': 2,

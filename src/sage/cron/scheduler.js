@@ -96,4 +96,3 @@ sage.cron.Scheduler.prototype.next = function() {
     self.next();
   }, job.getNextTimeout());
 };
-

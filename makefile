@@ -29,7 +29,7 @@ build/cron.compiled.js: build lint src/deps.js
 build/cron.min.js: lint src/deps.js
 	closure/library/closure/bin/build/closurebuilder.py \
 		--root='closure/library' \
-		--root='src' \
+		--root='src/' \
 		--namespace='cron.js' \
 		--output_mode='compiled' \
 		--compiler_flags='--compilation_level=SIMPLE_OPTIMIZATIONS' \
@@ -41,8 +41,8 @@ build/cron.min.js: lint src/deps.js
 build/cron.src.js: lint src/deps.js
 	closure/library/closure/bin/build/closurebuilder.py \
 		--root='closure/library' \
-		--root='src/sage' \
-		--namespace='sage.cron.Spec' \
+		--root='src/' \
+		--namespace='cron.js' \
 		--output_mode='script' \
 		> build/cron.src.js
 		

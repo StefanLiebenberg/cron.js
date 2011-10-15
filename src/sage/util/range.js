@@ -73,7 +73,8 @@ sage.util.Range.prototype.getValues = function(from, to) {
  * @return {Array.<number>} returns an array of all values.
  */
 sage.util.Range.prototype.getValuesInternal = function(from, to) {
-  var length;
+  var length, result;
+
   if (from > to || from < this.from || to > this.to) {
     var str = 'sage.util.Range: ';
     str += 'values are out of range';
