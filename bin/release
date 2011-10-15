@@ -13,6 +13,8 @@ git checkout master
 
 git merge --no-ff $name
 
+git tag -a "$version" -m "$name"
+
 git checkout develop
 
 git merge --no-ff $name
