@@ -29,16 +29,18 @@ sage.util.RangeParser.prototype.parseInternal = function(string) {
 
   var result = /** @type {Array} */ [];
   var len = /** @type {number} */ this.parsers.length;
-  var parser, result;
+
+  var parser;
 
   for (var i = 0; i < len; i++) {
-    parser = /** @type {sage.util.Parser} */ this.parsers[i];
+    parser = /** @type {sage.util.StringParser} */ this.parsers[i];
     if (parser.test(string)) {
-      result = parser.parse(string, this);
+      result = /** @type {Array} */ parser.parse(string, this);
       sage.util.array.uniq(result);
       result.sort(function(a, b) {return a - b});
       break;
     }
   }
+
   return result;
 };

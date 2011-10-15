@@ -21,6 +21,6 @@ goog.inherits(sage.cron.syntax.SingleParser, sage.util.StringParser);
  * @return {Array.<number>} return an array of numbers.
  */
 sage.cron.syntax.SingleParser.prototype.parseInternal = function(spec, parser) {
-  var at = parseInt(spec) - parser.range.from;
+  var at = parseInt(spec, 10) - parser.range.from;
   return [parser.range.valueAt(at)];
 };

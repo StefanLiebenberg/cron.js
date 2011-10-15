@@ -53,6 +53,15 @@ sage.util.StringParser.prototype.test = function(string) {
 
 
 /**
+ * @override {sage.util.Parser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @param {sage.util.Parser} parser the parser.
+ * @return {Array} return an array.
+ */
+sage.util.StringParser.prototype.parse;
+
+
+/**
  * @param {!string} string a string.
  * @return {Array.<string>} returns what e parser can extact from the string.
  */
@@ -61,4 +70,5 @@ sage.util.StringParser.prototype.parseInternal = function(string) {
     this.regex.lastIndex = 0;
     return string.match(this.regex);
   }
+  return [];
 };

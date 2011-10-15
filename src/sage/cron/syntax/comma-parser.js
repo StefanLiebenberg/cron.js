@@ -9,7 +9,7 @@ goog.require('sage.util.StringParser');
  */
 sage.cron.syntax.CommaParser = function() {
   var regexp = /\,/;
-  goog.base(this, regexp, this.parseInternal);
+  goog.base(this, regexp);
 };
 goog.inherits(sage.cron.syntax.CommaParser, sage.util.StringParser);
 

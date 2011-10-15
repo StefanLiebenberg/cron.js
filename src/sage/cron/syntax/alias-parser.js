@@ -18,6 +18,15 @@ goog.inherits(sage.cron.syntax.AliasParser, sage.util.StringParser);
 
 
 /**
+ * @override {sage.util.StringParser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @param {sage.cron.SpecParser} parser the spec_parser.
+ * @return {Array.<number>} return an array of numbers.
+ */
+sage.cron.AliasSpecParser.prototype.parse;
+
+
+/**
  * @param {string} spec the specification string.
  * @param {sage.cron.SpecParser} parser the spec_parser.
  * @return {Array.<number>} return an array of numbers.

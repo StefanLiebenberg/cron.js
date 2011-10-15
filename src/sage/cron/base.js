@@ -33,6 +33,14 @@ sage.cron.SpecParser = function(from, to, allowable_string) {
 goog.inherits(sage.cron.SpecParser, sage.util.RangeParser);
 
 
+/**
+ * @override {sage.util.RangeParser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @return {Array} returns an array.
+ */
+sage.cron.SpecParser.prototype.parse;
+
+
 
 /**
  * @constructor
