@@ -19,6 +19,12 @@ sage.cron.Scheduler = function() {
    * @private
    */
   this.running_ = false;
+
+  /**
+   * @private
+   * @type {number|undefined}
+   */
+  this.stored_timeout_ = undefined;
 };
 
 
@@ -42,7 +48,7 @@ sage.cron.Scheduler.prototype.add = function(job) {
 sage.cron.Scheduler.prototype.remove = function(job) {
   /** @type {number} */
   var index;
-  while ((index = this.jobs.indexOf(job)) !== -1) {
+  while ((index = this.jobs_.indexOf(job)) !== -1) {
     this.jobs_.splice(index);
   }
 };

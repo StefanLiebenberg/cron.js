@@ -25,7 +25,7 @@ sage.cron.syntax.IncrementParser.prototype.parseInternal =
 
   var parts = /** @type {Array.<string>} */ spec.split('/');
   var range = /** @type {Array.<number>} */parser.parse(parts[0]);
-  var increment = /** @type {number} */ parseInt(parts[1]);
+  var increment = /** @type {number} */ parseInt(parts[1], 10);
   /** @type {Array.<number>} */
   var result = [];
   for (var i = 0, l = range.length; i < l; i += increment) {

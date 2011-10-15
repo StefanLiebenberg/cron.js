@@ -24,7 +24,7 @@ sage.util.Range = function(from, to) {
 
 /**
  * @param {number} index the position of required value.
- * @return {number} returns the number at index.
+ * @return {number|undefined} returns the number at index.
  */
 sage.util.Range.prototype.valueAt = function(index) {
   if (index < 0 || index >= this.length) {
@@ -55,14 +55,13 @@ sage.util.Range.prototype.indexOf = function(value) {
  * @return {Array.<number>} returns an array of all values.
  */
 sage.util.Range.prototype.getValues = function(from, to) {
-
-  if (arguments.length !== 2) {
-    to = this.to;
-    if (arguments.length === 0) {
-      from = this.from;
-    }
+  if (typeof from !== 'number') {
+    from = /** @type {number} */ this.from;
   }
 
+  if (typeof to !== 'number') {
+    to = /** @type {number} */ this.to;
+  }
   return this.getValuesInternal(from, to);
 };
 

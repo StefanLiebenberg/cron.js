@@ -73,7 +73,7 @@ sage.cron.Spec.prototype.next = function(date) {
   var do_weekdays = len_weekdays && len_weekdays !== 7;
 
   var len_days = this.days.length;
-  var do_days = len_days && len_days.length !== 31;
+  var do_days = len_days && len_days !== 31;
 
   var len_months = this.months.length;
   var do_months = len_months && len_months !== 12;
