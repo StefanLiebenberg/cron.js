@@ -1,20 +1,13 @@
 SHELL := /bin/bash
 
-files=lib/extentions.js lib/singletons/cronspec.js lib/classes/cron.js lib/classes/cronscheduler.js lib/singletons/crontab.js
-main: build/cron.js
-	mkdir build -p;
-	cat $(files) > build/cron.js;
-
-
-compile: build/cron.compiled.js
-minify: build/cron.min.js
+main: all
 
 all: build/cron.compiled.js build/cron.min.js build/cron.src.js
 
 build:
 	mkdir build -p;
 
-build/cron.compiled.js: build lint src/deps.js
+build/cron.compiled.js: lint build src/deps.js
 	closure/library/closure/bin/build/closurebuilder.py \
 		--root='closure/library' \
 		--root='src' \
@@ -27,7 +20,7 @@ build/cron.compiled.js: build lint src/deps.js
 		--compiler_jar='closure/compiler/compiler.jar' \
 		> build/cron.compiled.js
 		
-build/cron.min.js: lint src/deps.js
+build/cron.min.js: lint build src/deps.js
 	closure/library/closure/bin/build/closurebuilder.py \
 		--root='closure/library' \
 		--root='src/' \
@@ -40,7 +33,7 @@ build/cron.min.js: lint src/deps.js
 		--compiler_jar='closure/compiler/compiler.jar' \
 		> build/cron.min.js
 		
-build/cron.src.js: lint src/deps.js
+build/cron.src.js: lint build src/deps.js
 	closure/library/closure/bin/build/closurebuilder.py \
 		--root='closure/library' \
 		--root='src/' \
@@ -49,13 +42,12 @@ build/cron.src.js: lint src/deps.js
 		> build/cron.src.js
 		
 		
-src/deps.js:
+src/deps.js: _ALWAYS
 	closure/library/closure/bin/build/depswriter.py \
 		--root_with_prefix="src ../../../../src" \
     > src/deps.js;
-	
 
-		
 lint:
 	gjslint --strict -r src
 
+_ALWAYS:

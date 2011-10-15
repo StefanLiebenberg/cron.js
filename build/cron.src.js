@@ -1606,6 +1606,12 @@ sage.cron.Scheduler = function() {
    * @private
    */
   this.running_ = false;
+
+  /**
+   * @private
+   * @type {number|undefined}
+   */
+  this.stored_timeout_ = undefined;
 };
 
 
@@ -1629,7 +1635,7 @@ sage.cron.Scheduler.prototype.add = function(job) {
 sage.cron.Scheduler.prototype.remove = function(job) {
   /** @type {number} */
   var index;
-  while ((index = this.jobs.indexOf(job)) !== -1) {
+  while ((index = this.jobs_.indexOf(job)) !== -1) {
     this.jobs_.splice(index);
   }
 };
@@ -1739,6 +1745,15 @@ sage.util.StringParser.prototype.test = function(string) {
 
 
 /**
+ * @override {sage.util.Parser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @param {sage.util.Parser} parser the parser.
+ * @return {Array} return an array.
+ */
+sage.util.StringParser.prototype.parse;
+
+
+/**
  * @param {!string} string a string.
  * @return {Array.<string>} returns what e parser can extact from the string.
  */
@@ -1747,6 +1762,7 @@ sage.util.StringParser.prototype.parseInternal = function(string) {
     this.regex.lastIndex = 0;
     return string.match(this.regex);
   }
+  return [];
 };
 goog.provide('sage.cron.syntax.AllParser');
 goog.require('sage.util.StringParser');
@@ -1765,12 +1781,21 @@ goog.inherits(sage.cron.syntax.AllParser, sage.util.StringParser);
 
 
 /**
+ * @override {sage.util.StringParser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @param {sage.cron.SpecParser} parser the spec_parser.
+ * @return {Array.<number>} return an array of numbers.
+ */
+sage.cron.syntax.AllParser.prototype.parse;
+
+
+/**
  * @param {string} spec the specification string.
  * @param {sage.cron.SpecParser} parser the spec_parser.
  * @return {Array.<number>} return an array of numbers.
  */
 sage.cron.syntax.AllParser.prototype.parseInternal = function(spec, parser) {
-  return parser.range.getValues();
+  return parser.range.getValues(null, null);
 };
 goog.provide('sage.cron.syntax.RangeParser');
 goog.require('sage.util.StringParser');
@@ -1784,9 +1809,18 @@ goog.require('sage.util.StringParser');
  */
 sage.cron.syntax.RangeParser = function(allow) {
   var regexp = new RegExp('^' + allow + '-' + allow + '$');
-  goog.base(this, regexp, this.parseInternal);
+  goog.base(this, regexp);
 };
 goog.inherits(sage.cron.syntax.RangeParser, sage.util.StringParser);
+
+
+/**
+ * @override {sage.util.StringParser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @param {sage.cron.SpecParser} parser the spec_parser.
+ * @return {Array.<number>} return an array of numbers.
+ */
+sage.cron.syntax.RangeParser.prototype.parse;
 
 
 /**
@@ -1796,9 +1830,9 @@ goog.inherits(sage.cron.syntax.RangeParser, sage.util.StringParser);
  */
 sage.cron.syntax.RangeParser.prototype.parseInternal = function(spec, parser) {
   var parts = spec.split('-');
-  var startAt = parseInt(parts[0]) - parser.range.from;
-  var endAt = parseInt(parts[1]) - parser.range.from;
-  return parser.range.getValues().slice(startAt, endAt + 1);
+  var startAt = parseInt(parts[0], 10) - parser.range.from;
+  var endAt = parseInt(parts[1], 10) - parser.range.from;
+  return parser.range.getValues(null, null).slice(startAt, endAt + 1);
 };
 goog.provide('sage.cron.syntax.IncrementParser');
 goog.require('sage.util.StringParser');
@@ -1827,7 +1861,7 @@ sage.cron.syntax.IncrementParser.prototype.parseInternal =
 
   var parts = /** @type {Array.<string>} */ spec.split('/');
   var range = /** @type {Array.<number>} */parser.parse(parts[0]);
-  var increment = /** @type {number} */ parseInt(parts[1]);
+  var increment = /** @type {number} */ parseInt(parts[1], 10);
   /** @type {Array.<number>} */
   var result = [];
   for (var i = 0, l = range.length; i < l; i += increment) {
@@ -1862,7 +1896,7 @@ sage.util.Range = function(from, to) {
 
 /**
  * @param {number} index the position of required value.
- * @return {number} returns the number at index.
+ * @return {number|undefined} returns the number at index.
  */
 sage.util.Range.prototype.valueAt = function(index) {
   if (index < 0 || index >= this.length) {
@@ -1893,14 +1927,13 @@ sage.util.Range.prototype.indexOf = function(value) {
  * @return {Array.<number>} returns an array of all values.
  */
 sage.util.Range.prototype.getValues = function(from, to) {
-
-  if (arguments.length !== 2) {
-    to = this.to;
-    if (arguments.length === 0) {
-      from = this.from;
-    }
+  if (typeof from !== 'number') {
+    from = /** @type {number} */ this.from;
   }
 
+  if (typeof to !== 'number') {
+    to = /** @type {number} */ this.to;
+  }
   return this.getValuesInternal(from, to);
 };
 
@@ -1983,17 +2016,19 @@ sage.util.RangeParser.prototype.parseInternal = function(string) {
 
   var result = /** @type {Array} */ [];
   var len = /** @type {number} */ this.parsers.length;
-  var parser, result;
+
+  var parser;
 
   for (var i = 0; i < len; i++) {
-    parser = /** @type {sage.util.Parser} */ this.parsers[i];
+    parser = /** @type {sage.util.StringParser} */ this.parsers[i];
     if (parser.test(string)) {
-      result = parser.parse(string, this);
+      result = /** @type {Array} */ parser.parse(string, this);
       sage.util.array.uniq(result);
       result.sort(function(a, b) {return a - b});
       break;
     }
   }
+
   return result;
 };
 goog.provide('sage.cron.syntax.SingleParser');
@@ -2019,7 +2054,7 @@ goog.inherits(sage.cron.syntax.SingleParser, sage.util.StringParser);
  * @return {Array.<number>} return an array of numbers.
  */
 sage.cron.syntax.SingleParser.prototype.parseInternal = function(spec, parser) {
-  var at = parseInt(spec) - parser.range.from;
+  var at = parseInt(spec, 10) - parser.range.from;
   return [parser.range.valueAt(at)];
 };
 goog.provide('sage.cron.syntax.AliasParser');
@@ -2039,6 +2074,15 @@ sage.cron.syntax.AliasParser = function(allow) {
   this.aliases = {};
 };
 goog.inherits(sage.cron.syntax.AliasParser, sage.util.StringParser);
+
+
+/**
+ * @override {sage.util.StringParser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @param {sage.cron.SpecParser} parser the spec_parser.
+ * @return {Array.<number>} return an array of numbers.
+ */
+sage.cron.AliasSpecParser.prototype.parse;
 
 
 /**
@@ -2067,7 +2111,7 @@ goog.require('sage.util.StringParser');
  */
 sage.cron.syntax.CommaParser = function() {
   var regexp = /\,/;
-  goog.base(this, regexp, this.parseInternal);
+  goog.base(this, regexp);
 };
 goog.inherits(sage.cron.syntax.CommaParser, sage.util.StringParser);
 
@@ -2126,6 +2170,14 @@ sage.cron.SpecParser = function(from, to, allowable_string) {
   this.parsers[4] = new sage.cron.syntax.IncrementParser(this.allow);
 };
 goog.inherits(sage.cron.SpecParser, sage.util.RangeParser);
+
+
+/**
+ * @override {sage.util.RangeParser.prototype.parse}
+ * @param {string} spec the specification string.
+ * @return {Array} returns an array.
+ */
+sage.cron.SpecParser.prototype.parse;
 
 
 
@@ -2376,7 +2428,7 @@ sage.cron.Spec.prototype.next = function(date) {
   var do_weekdays = len_weekdays && len_weekdays !== 7;
 
   var len_days = this.days.length;
-  var do_days = len_days && len_days.length !== 31;
+  var do_days = len_days && len_days !== 31;
 
   var len_months = this.months.length;
   var do_months = len_months && len_months !== 12;
