@@ -25,29 +25,28 @@ Grab one of the files in that directory:
   
 These files should be there:
 
-  *  cron.min.js      - recommended for general use.
-  *  cron.js          - unminified source code.
-  *  cron.compiled.js - experimental
-
+  *  cron.compiled.js - compiled with closure. Recommended.
+  *  cron.min.js      - minified source code + required closure functions.
+  *  cron.src.js      - unminified source code + required closure functions.
+  
 
 ## Make script:
 
-Create the cron.js file:
+Create the cron.compiled.js file:
 
 ```shell
-make
+make buid/cron.compiled.js
 ```
 
 Create the cron.min.js file:
-
 ```shell
-make minify
+make build/cron.min.js
 ```
 
-Create the cron.compiled.js files
+Create the cron.src.js files
 
 ```shell
-make compile
+make build/cron.src.js
 ```
 
 
@@ -56,9 +55,9 @@ Usage:
 
 Usage is inteded to basic. There are three main objects, CronSpec, Cron and Crontab.
 
-* CronSpec - inteprets cronsyntax and understands how the calculate dates from it.
-* Cron     - new Cron( schedule, function ) will create a job that can be given to Crontab to manage/run;
-* Crontab  - Job Scheduler;
+* Cron      - Job Scheduler. Manages cron jobs.
+* Cron.Spec - Cron Specification. Inteprets cron-syntax and contains the logic for calculating date intervals.
+* Cron.Job  - Cron Job. Contains a schedule and block information for each job.
 
 You will only need to know about Cron and Crontab.
 
@@ -66,22 +65,30 @@ You will only need to know about Cron and Crontab.
 
 
 ```javascript
-var schedule = "0 0 1,13 * * *"; // 1 am and 1 pm every day
-var job = new Cron( schedule, function () {
-  // task goes here
+var cron = new Cron();
+cron.start();
+cron.add( cronjob );
+```
+
+###Cron.Spec
+
+```javascript
+var spec = new Cron.Spec( '0 0 * * * mon-wed' ) // every minute hour from monday to wednesday;
+```
+
+###Cron.Job
+
+```javascript
+var cronjob = new Cron.Job(new Cron.Spec( '*/10 * * * * *' ), function () {
+  console.log('running job');
 });
 ```
 
-Crontab.add( job );
+Cron.Job( spec, block );
 
-###Crontab
+@param {string|Cron.Spec} spec spec can be a Cron.Spec object or just a plain string.
+@param {Function} block block must be a function.
 
-```javascript
-Crontab.add( job );
-Crontab.remove( job );
-Crontab.start();
-Crontab.stop();
-```
 
 
 ## Syntax:
@@ -128,7 +135,7 @@ You should combind these six columns to specify a interval at which a job object
 
 ```javascript
 var schedule = "0 0 0 * * 2-6"; // 00:00:00 on every weeday
-new Cron( schedule, function () {
+new Cron.Job( schedule, function () {
   // do stuff here
 });
 ```
