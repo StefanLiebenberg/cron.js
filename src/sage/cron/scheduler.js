@@ -28,9 +28,10 @@ sage.cron.Scheduler = function() {
  */
 sage.cron.Scheduler.prototype.add = function(job) {
   this.jobs_.push(job);
+  /*
   if (this.running_) {
     this.next();
-  }
+  }*/
 };
 
 
@@ -84,7 +85,7 @@ sage.cron.Scheduler.prototype.next = function() {
   /** @type {sage.cron.Job} */
   var job = this.jobs_[0];
   for (var i = 1, l = this.jobs_.length; i < l; i++) {
-    if (this.jobs_[i].next_at_ < job.next_at_) {
+    if (this.jobs_[i].next_at < job.next_at) {
       job = this.jobs_[i];
     }
   }
