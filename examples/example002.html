@@ -21,7 +21,10 @@
     <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
     <script src='../build/cron.compiled.js'></script>
     <script id="script">
+
       jQuery( document ).ready( function () {  
+        
+        
         function test( spec, amount ) {
           var cron = Cron.Spec.parse( spec );
           var now  = new Date();
@@ -32,9 +35,11 @@
           return amount + " x SPEC["+spec+"] = " + ( new Date() - now );
         };
 
-
+        var lastTest = new Date();
         function doTest(){
           var start = new Date();
+          console.log( 'running test: ' + ( start - lastTest ) + 'ms since last test' );
+          lastTest = start;
           var specs = [
             "@second",
             "@minute",
@@ -56,14 +61,9 @@
 
           result.append( "TOTAL MS: " + ( new Date() - start ) );
         };
-  
-    doTest();
-    X = doTest;
-    //  var cron = new Cron();
-    //  cron.start();
-    //  cron.add( new Cron.Job("*/5 * * * * *", doTest ) )
-    
-  
+        var cron = new Cron();
+        cron.start();
+        cron.add( new Cron.Job("*/5 * * * * *", doTest ) )
     });
     </script>
   </head>

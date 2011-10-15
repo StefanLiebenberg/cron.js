@@ -1569,7 +1569,7 @@ sage.cron.Job.prototype.getNextTimeout = function(date) {
   }
 
   if (! this.next_at) {
-    this.calcNextAt();
+    this.calcNextAt_();
   }
 
   return Math.max(10, this.next_at - date);
@@ -1582,7 +1582,7 @@ sage.cron.Job.prototype.getNextTimeout = function(date) {
 sage.cron.Job.prototype.run = function() {
   this.last_at = new Date();
   setTimeout(this.block_, 10);
-  this.calcNextAt();
+  this.calcNextAt_();
 };
 
 goog.provide('sage.cron.Scheduler');
