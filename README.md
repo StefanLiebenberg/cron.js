@@ -4,7 +4,7 @@ _a javascript job scheduler inspired by cron._
 
 * Homepage: http://stefanliebenberg.github.com/cron.js/  
 * Contact: siga.fredo@gmail.com  
-* Licensee: http://creativecommons.org/licenses/by/3.0/  
+* License: http://creativecommons.org/licenses/by/3.0/  
 
 ## notice:
 
@@ -39,6 +39,7 @@ make buid/cron.compiled.js
 ```
 
 Create the cron.min.js file:
+
 ```shell
 make build/cron.min.js
 ```
@@ -53,11 +54,12 @@ make build/cron.src.js
 Usage:
 ---
 
-Usage is inteded to basic. There are three main objects, CronSpec, Cron and Crontab.
+Usage is inteded to basic. There are three main objects: Cron, Cron.Job, Cron.Spec;
 
 * Cron      - Job Scheduler. Manages cron jobs.
-* Cron.Spec - Cron Specification. Inteprets cron-syntax and contains the logic for calculating date intervals.
 * Cron.Job  - Cron Job. Contains a schedule and block information for each job.
+* Cron.Spec - Cron Specification. Inteprets cron-syntax and contains the logic for calculating date intervals.
+
 
 You will only need to know about Cron and Crontab.
 
@@ -84,11 +86,12 @@ var cronjob = new Cron.Job(new Cron.Spec( '*/10 * * * * *' ), function () {
 });
 ```
 
-Cron.Job( spec, block );
 
+```
+Cron.Job( spec, block );
 @param {string|Cron.Spec} spec spec can be a Cron.Spec object or just a plain string.
 @param {Function} block block must be a function.
-
+```
 
 
 ## Syntax:
