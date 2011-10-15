@@ -23,7 +23,7 @@ goog.inherits(sage.cron.syntax.AliasParser, sage.util.StringParser);
  * @return {Array.<number>} return an array of numbers.
  */
 sage.cron.syntax.AliasParser.prototype.parseInternal = function(spec, parser) {
-  spec = spec.replace(this.matcher, function(string) {
+  spec = spec.replace(this.regex, function(string) {
     string = string.toLowerCase();
     if (string in parser.aliases) {
       string = parser.aliases[string];

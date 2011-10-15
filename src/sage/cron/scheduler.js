@@ -76,16 +76,16 @@ sage.cron.Scheduler.prototype.stop = function() {
 sage.cron.Scheduler.prototype.next = function() {
 
   /** @type {boolean} */
-  var stop = !this.running || this.stored_timeout_ || this.jobs.length === 0;
+  var stop = !this.running_ || this.stored_timeout_ || this.jobs_.length === 0;
   if (stop) {
     return;
   }
 
   /** @type {sage.cron.Job} */
-  var job = this.jobs[0];
-  for (var i = 1, l = this.jobs.length; i < l; i++) {
-    if (this.jobs[i].next_at_ < job.next_at_) {
-      job = this.jobs[i];
+  var job = this.jobs_[0];
+  for (var i = 1, l = this.jobs_.length; i < l; i++) {
+    if (this.jobs_[i].next_at_ < job.next_at_) {
+      job = this.jobs_[i];
     }
   }
 

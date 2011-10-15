@@ -1546,12 +1546,12 @@ sage.cron.Job.prototype.calcNextAt_ = function() {
   /** @type {Date|undefined} */
   var temp;
   if (this.last_at) {
-    temp = /** @type {Date} */ this.cronspec.next(this.last_at);
+    temp = /** @type {Date} */ this.cronspec_.next(this.last_at);
     while (temp < now) {
-      temp = this.cronspec.next(temp);
+      temp = this.cronspec_.next(temp);
     }
   } else {
-    temp = this.cronspec.next(now);
+    temp = this.cronspec_.next(now);
   }
 
   /** @type {Date} */
@@ -1581,7 +1581,7 @@ sage.cron.Job.prototype.getNextTimeout = function(date) {
  */
 sage.cron.Job.prototype.run = function() {
   this.last_at = new Date();
-  setTimeout(this.job, 10);
+  setTimeout(this.block_, 10);
   this.calcNextAt();
 };
 
@@ -1663,16 +1663,16 @@ sage.cron.Scheduler.prototype.stop = function() {
 sage.cron.Scheduler.prototype.next = function() {
 
   /** @type {boolean} */
-  var stop = !this.running || this.stored_timeout_ || this.jobs.length === 0;
+  var stop = !this.running_ || this.stored_timeout_ || this.jobs_.length === 0;
   if (stop) {
     return;
   }
 
   /** @type {sage.cron.Job} */
-  var job = this.jobs[0];
-  for (var i = 1, l = this.jobs.length; i < l; i++) {
-    if (this.jobs[i].next_at_ < job.next_at_) {
-      job = this.jobs[i];
+  var job = this.jobs_[0];
+  for (var i = 1, l = this.jobs_.length; i < l; i++) {
+    if (this.jobs_[i].next_at_ < job.next_at_) {
+      job = this.jobs_[i];
     }
   }
 
@@ -2046,7 +2046,7 @@ goog.inherits(sage.cron.syntax.AliasParser, sage.util.StringParser);
  * @return {Array.<number>} return an array of numbers.
  */
 sage.cron.syntax.AliasParser.prototype.parseInternal = function(spec, parser) {
-  spec = spec.replace(this.matcher, function(string) {
+  spec = spec.replace(this.regex, function(string) {
     string = string.toLowerCase();
     if (string in parser.aliases) {
       string = parser.aliases[string];
@@ -2530,15 +2530,27 @@ sage.cron.Spec.aliases_ = {
 sage.cron.Spec.next = function(date, cronspec) {
   return cronspec.next(date);
 };
+
+
+/**
+ * @param {string} string a interval string to be parsed.
+ * @return {sage.cron.Spec} returns a spec.
+ */
+sage.cron.Spec.parse = function(string) {
+  return new sage.cron.Spec(string);
+};
 goog.provide('cron.js');
 goog.require('sage.cron.Job');
 goog.require('sage.cron.Scheduler');
 goog.require('sage.cron.Spec');
 
-goog.exportSymbol('Cron', sage.cron.Schduler);
+goog.exportSymbol('Cron', sage.cron.Scheduler);
+goog.exportSymbol('Cron.prototype.start', sage.cron.Scheduler.prototype.start);
+goog.exportSymbol('Cron.prototype.add', sage.cron.Scheduler.prototype.add);
 goog.exportSymbol('Cron.Spec', sage.cron.Spec);
 goog.exportSymbol('Cron.Spec.prototype.next', sage.cron.Spec.prototype.next);
 goog.exportSymbol('Cron.Spec.next', sage.cron.Spec.next);
+goog.exportSymbol('Cron.Spec.parse', sage.cron.Spec.parse);
 goog.exportSymbol('Cron.Job', sage.cron.Job);
 
 

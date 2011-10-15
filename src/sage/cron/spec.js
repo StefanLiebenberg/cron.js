@@ -228,3 +228,12 @@ sage.cron.Spec.aliases_ = {
 sage.cron.Spec.next = function(date, cronspec) {
   return cronspec.next(date);
 };
+
+
+/**
+ * @param {string} string a interval string to be parsed.
+ * @return {sage.cron.Spec} returns a spec.
+ */
+sage.cron.Spec.parse = function(string) {
+  return new sage.cron.Spec(string);
+};

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+version=$1
+name=release-$version
+
+git checkout -b $name
+
+echo $version > VERSION
+
+git commit -va -m "$name"
+
+git checkout master
+
+git merge --no-ff $name
+
+git checkout develop
+
+git merge --no-ff $name
+
+git branch -d $name

@@ -44,12 +44,12 @@ sage.cron.Job.prototype.calcNextAt_ = function() {
   /** @type {Date|undefined} */
   var temp;
   if (this.last_at) {
-    temp = /** @type {Date} */ this.cronspec.next(this.last_at);
+    temp = /** @type {Date} */ this.cronspec_.next(this.last_at);
     while (temp < now) {
-      temp = this.cronspec.next(temp);
+      temp = this.cronspec_.next(temp);
     }
   } else {
-    temp = this.cronspec.next(now);
+    temp = this.cronspec_.next(now);
   }
 
   /** @type {Date} */
@@ -79,7 +79,7 @@ sage.cron.Job.prototype.getNextTimeout = function(date) {
  */
 sage.cron.Job.prototype.run = function() {
   this.last_at = new Date();
-  setTimeout(this.job, 10);
+  setTimeout(this.block_, 10);
   this.calcNextAt();
 };
 
