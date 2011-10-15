@@ -16,6 +16,18 @@ sage.util.date.addTime = function(date, time) {
 
 /**
  * @param {Date} date the Date object to modify.
+ * @param {number} seconds the amount of milleseconds to add to date.
+ * @return {Date} returns the modified date instance.
+ */
+sage.util.date.addSeconds = function(date, seconds) {
+  var current = date.getSeconds();
+  date.setSeconds(current + seconds);
+  return date;
+};
+
+
+/**
+ * @param {Date} date the Date object to modify.
  * @param {number} minutes the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */

@@ -9,7 +9,7 @@ goog.require('sage.util.StringParser');
  * @param {string} allow Allowable string in parser.
  */
 sage.cron.syntax.SingleParser = function(allow) {
-  var regexp = new RegExp('^' + this.allow + '$');
+  var regexp = new RegExp('^' + allow + '$');
   goog.base(this, regexp);
 };
 goog.inherits(sage.cron.syntax.SingleParser, sage.util.StringParser);
@@ -22,5 +22,5 @@ goog.inherits(sage.cron.syntax.SingleParser, sage.util.StringParser);
  */
 sage.cron.syntax.SingleParser.prototype.parseInternal = function(spec, parser) {
   var at = parseInt(spec) - parser.range.from;
-  return parser.range.valueAt(at);
+  return [parser.range.valueAt(at)];
 };

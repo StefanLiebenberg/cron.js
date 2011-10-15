@@ -56,7 +56,7 @@ sage.cron.SpecWeekdayParser =
 
 
 /** @type {Object.<number>} */
-sage.cron.SpecWeekParser.aliases = {
+sage.cron.SpecWeekdayParser.aliases = {
   'sun': 1,
   'mon': 2,
   'tue': 3,

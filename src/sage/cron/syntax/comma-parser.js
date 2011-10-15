@@ -30,8 +30,8 @@ sage.cron.syntax.CommaParser.prototype.parseInternal = function(spec, parser) {
   /** @type {Array.<number>} */
   results = [];
 
-  for (var i = 0; i < len, i++) {
-    results.push.apply(result, parser.parse(parts[i]));
+  for (var i = 0; i < len; i++) {
+    results.push.apply(results, parser.parse(parts[i]));
   }
   return results;
 };

@@ -46,9 +46,8 @@ sage.cron.Job.prototype.calcNextAt_ = function() {
   if (this.last_at) {
     temp = /** @type {Date} */ this.cronspec.next(this.last_at);
     while (temp < now) {
-      temp = this.cronspec.next(tempdate);
+      temp = this.cronspec.next(temp);
     }
-
   } else {
     temp = this.cronspec.next(now);
   }

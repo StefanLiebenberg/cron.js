@@ -9,7 +9,7 @@ goog.require('sage.util.StringParser');
  * @param {string} allow Allowable string in parser.
  */
 sage.cron.syntax.IncrementParser = function(allow) {
-  var regexp = new RegExp('^[^\/]+\/' + this.allow + '$');
+  var regexp = new RegExp('^[^\/]+\/' + allow + '$');
   goog.base(this, regexp);
 };
 goog.inherits(sage.cron.syntax.IncrementParser, sage.util.StringParser);

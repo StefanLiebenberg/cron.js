@@ -5,7 +5,6 @@ goog.require('sage.cron.SpecMinuteParser');
 goog.require('sage.cron.SpecMonthParser');
 goog.require('sage.cron.SpecSecondParser');
 goog.require('sage.cron.SpecWeekdayParser');
-goog.require('sage.util.SpecRangeParser');
 goog.require('sage.util.date');
 
 
@@ -17,8 +16,8 @@ goog.require('sage.util.date');
 sage.cron.Spec = function(spec) {
   spec = spec.trim();
 
-  if (spec in aliases) {
-    spec = sage.cron.Spec.aliases[spec];
+  if (spec in sage.cron.Spec.aliases_) {
+    spec = sage.cron.Spec.aliases_[spec];
   }
 
   /** @type {string} */
@@ -36,17 +35,17 @@ sage.cron.Spec = function(spec) {
   }
 
   /** @type {Array.<number>} */
-  this.seconds = sage.cron.SecondParser.parse(parts[0]);
+  this.seconds = sage.cron.SpecSecondParser.parse(parts[0]);
   /** @type {Array.<number>} */
-  this.minutes = sage.cron.MinuteParser.parse(parts[1]);
+  this.minutes = sage.cron.SpecMinuteParser.parse(parts[1]);
   /** @type {Array.<number>} */
-  this.hours = sage.cron.HourParser.parse(patrs[2]);
+  this.hours = sage.cron.SpecHourParser.parse(parts[2]);
   /** @type {Array.<number>} */
-  this.days = sage.cron.DayParser.parse(parts[3]);
+  this.days = sage.cron.SpecDayParser.parse(parts[3]);
   /** @type {Array.<number>} */
-  this.months = sage.cron.MonthParser.parse(parts[4]);
+  this.months = sage.cron.SpecMonthParser.parse(parts[4]);
   /** @type {Array.<number>} */
-  this.weekdays = sage.cron.WeekdayParser.parse(parts[5]);
+  this.weekdays = sage.cron.SpecWeekdayParser.parse(parts[5]);
 };
 
 
@@ -76,7 +75,7 @@ sage.cron.Spec.prototype.next = function(date) {
   var len_days = this.days.length;
   var do_days = len_days && len_days.length !== 31;
 
-  var len_months = cronspec.months.length;
+  var len_months = this.months.length;
   var do_months = len_months && len_months !== 12;
 
   var done = false, count, flag;
@@ -191,7 +190,7 @@ sage.cron.Spec.prototype.next = function(date) {
       next.setDate(1);
       if (flag) {
         next.setMonth(0);
-        sage.util.date.addYears(next, 1):
+        sage.util.date.addYears(next, 1);
       }
       continue;
     }

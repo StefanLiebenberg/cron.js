@@ -38,7 +38,7 @@ sage.util.Range.prototype.valueAt = function(index) {
  * @param {number} value a value that might be within range.
  * @return {number} returns the index of value.
  */
-sage.util.Range.prototype.valueAt = function(value) {
+sage.util.Range.prototype.indexOf = function(value) {
   var index = -1;
 
   if (value >= this.from && value <= this.to) {

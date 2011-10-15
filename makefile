@@ -41,8 +41,8 @@ build/cron.min.js: lint src/deps.js
 build/cron.src.js: lint src/deps.js
 	closure/library/closure/bin/build/closurebuilder.py \
 		--root='closure/library' \
-		--root='src/sage/util' \
-		--namespace='sage.util.RangeParser' \
+		--root='src/sage' \
+		--namespace='sage.cron.Spec' \
 		--output_mode='script' \
 		> build/cron.src.js
 		
