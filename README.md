@@ -86,9 +86,12 @@ var cronjob = new Cron.Job(new Cron.Spec( '*/10 * * * * *' ), function () {
 
 
 ```javascript
+
+/**
+  * @param {string|Cron.Spec} spec spec can be a Cron.Spec object or just a plain string.
+  * @param {Function} block block must be a function.
+  */
 Cron.Job( spec, block );
-@param {string|Cron.Spec} spec spec can be a Cron.Spec object or just a plain string.
-@param {Function} block block must be a function.
 ``` 
 
 
