@@ -1560,7 +1560,7 @@ sage.cron.Job.prototype.calcNextAt_ = function() {
 
 
 /**
- * @param {Date|undefined} date get the timeout from date.
+ * @param {?Date} date get the timeout from date.
  * @return {number} returns the timeout value.
  */
 sage.cron.Job.prototype.getNextTimeout = function(date) {
@@ -1621,10 +1621,32 @@ sage.cron.Scheduler = function() {
  */
 sage.cron.Scheduler.prototype.add = function(job) {
   this.jobs_.push(job);
-  /*
   if (this.running_) {
     this.next();
-  }*/
+  }
+};
+
+
+/**
+ * Tolerance level for skipped dates.
+ * @private
+ * @type {number}
+ */
+sage.cron.Scheduler.prototype.tolerance_ = 1000;
+
+
+/**
+ * Checks that cron is still running if it needs to be.
+ */
+sage.cron.Scheduler.prototype.check = function() {
+  // if running is false then we do nothing.
+  if (this.running_) {
+    var next = this.next_scheduled_at_;
+    var now = new Date() - this.tolerance_;
+    if (next < now) {
+      this.restart();
+    }
+  }
 };
 
 
@@ -1648,7 +1670,37 @@ sage.cron.Scheduler.prototype.start = function() {
   if (!this.running_) {
     this.running_ = true;
     this.next();
+    this.startCheck_();
   }
+};
+
+
+/**
+ * @private
+ */
+sage.cron.Scheduler.prototype.startCheck_ = function() {
+  if (!this.stored_interval_) {
+    this.stored_interval_ = setInterval(this.check.bind(this), 60000);
+  }
+};
+
+
+/**
+ * @private
+ */
+sage.cron.Scheduler.prototype.stopCheck_ = function() {
+  if (this.stored_interval_) {
+    clearInterval(this.stored_interval_);
+  }
+};
+
+
+/**
+ * @return {undefined} returns nothing.
+ */
+sage.cron.Scheduler.prototype.restart = function() {
+  this.stop();
+  this.start();
 };
 
 
@@ -1658,8 +1710,8 @@ sage.cron.Scheduler.prototype.start = function() {
 sage.cron.Scheduler.prototype.stop = function() {
   if (this.running_) {
     this.running_ = false;
-    clearTimeout(this.stored_timeout_);
-    delete this.stored_timeout_;
+    this.clearTimeout_();
+    this.stopCheck_();
   }
 };
 
@@ -1670,25 +1722,100 @@ sage.cron.Scheduler.prototype.stop = function() {
 sage.cron.Scheduler.prototype.next = function() {
 
   /** @type {boolean} */
-  var stop = !this.running_ || this.stored_timeout_ || this.jobs_.length === 0;
+  var stop = !this.running_;
+  stop = stop || Boolean(this.stored_timeout_);
+  stop = stop || !Boolean(this.jobs_.length);
+
   if (stop) {
     return;
   }
 
   /** @type {sage.cron.Job} */
-  var job = this.jobs_[0];
-  for (var i = 1, l = this.jobs_.length; i < l; i++) {
-    if (this.jobs_[i].next_at < job.next_at) {
-      job = this.jobs_[i];
+  var job = this.getNextJob();
+  this.executeJob_(job);
+
+};
+
+
+/**
+ * @param {sage.cron.Job} job job to execute.
+ * @private
+ */
+sage.cron.Scheduler.prototype.executeJob_ = function(job) {
+
+  var now = new Date();
+  var timeout = job.getNextTimeout(null);
+  var next = new Date(now.getTime() + timeout);
+
+  this.next_scheduled_at_ = next;
+  this.setTimeout_(function() {
+    job.run();
+    this.clearTimeoutValue_();
+    delete this.next_scheduled_at_;
+    this.next();
+  }, timeout);
+};
+
+
+/**
+ * @private
+ * @param {Function} block function to timeout.
+ * @param {number} timeout number of ms to timeout.
+ */
+sage.cron.Scheduler.prototype.setTimeout_ = function(block, timeout) {
+  var stored = setTimeout(goog.bind(block, this), timeout);
+  this.setTimeoutValue_(stored);
+};
+
+
+/**
+ * @private
+ */
+sage.cron.Scheduler.prototype.clearTimeout_ = function() {
+  var stored = this.getTimeoutValue_();
+  clearTimeout(stored);
+  this.clearTimeoutValue_();
+};
+
+
+/**
+ * @private
+ * @param {number} timeout a timeout number to store.
+ */
+sage.cron.Scheduler.prototype.setTimeoutValue_ = function(timeout) {
+  this.stored_timeout_ = timeout;
+};
+
+
+/**
+ * @private
+ * @return {number|undefined} returns stored timeout value.
+ */
+sage.cron.Scheduler.prototype.getTimeoutValue_ = function() {
+  return this.stored_timeout_;
+};
+
+
+/**
+ * @private
+ */
+sage.cron.Scheduler.prototype.clearTimeoutValue_ = function() {
+  delete this.stored_timeout_;
+};
+
+
+/**
+ * @return {sage.cron.Job} returns the next job.
+ */
+sage.cron.Scheduler.prototype.getNextJob = function() {
+  var min = this.jobs_[0];
+  for (var job, i = 1, l = this.jobs_.length; i < l; i++) {
+    job = this.jobs_[i];
+    if (job.next_at < min.next_at) {
+      min = job;
     }
   }
-
-  var self = this;
-  this.storedTimeout = setTimeout(function() {
-    job.run();
-    delete self.storedTimeout;
-    self.next();
-  }, job.getNextTimeout());
+  return min;
 };
 goog.provide('sage.util.Parser');
 goog.provide('sage.util.StringParser');
@@ -2082,7 +2209,7 @@ goog.inherits(sage.cron.syntax.AliasParser, sage.util.StringParser);
  * @param {sage.cron.SpecParser} parser the spec_parser.
  * @return {Array.<number>} return an array of numbers.
  */
-sage.cron.AliasSpecParser.prototype.parse;
+sage.cron.syntax.AliasParser.prototype.parse;
 
 
 /**
@@ -2599,6 +2726,8 @@ goog.require('sage.cron.Spec');
 
 goog.exportSymbol('Cron', sage.cron.Scheduler);
 goog.exportSymbol('Cron.prototype.start', sage.cron.Scheduler.prototype.start);
+goog.exportSymbol('Cron.prototype.stop', sage.cron.Scheduler.prototype.stop);
+goog.exportSymbol('Cron.prototype.check', sage.cron.Scheduler.prototype.check);
 goog.exportSymbol('Cron.prototype.add', sage.cron.Scheduler.prototype.add);
 goog.exportSymbol('Cron.Spec', sage.cron.Spec);
 goog.exportSymbol('Cron.Spec.prototype.next', sage.cron.Spec.prototype.next);
