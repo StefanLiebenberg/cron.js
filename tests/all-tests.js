@@ -1,1 +1,19 @@
-var _allTests = ["cron-test.html","sage/util/array-test.html","sage/util/range-test.html","sage/util/parser-test.html","sage/util/date-test.html","sage/util/range-parser-test.html","sage/cron/scheduler-test.html","sage/cron/job-test.html","sage/cron/syntax/increment-parser-test.html","sage/cron/syntax/comma-parser-test.html","sage/cron/syntax/alias-parser-test.html","sage/cron/syntax/all-parser-test.html","sage/cron/syntax/range-parser-test.html","sage/cron/syntax/single-parser-test.html","sage/cron/parsers-test.html","sage/cron/spec-test.html","sage/cron/base-test.html"]
+var _allTests = [
+  'cron-test.html',
+  'sage/util/array-test.html',
+  'sage/util/range-test.html',
+  'sage/util/parser-test.html',
+  'sage/util/date-test.html',
+  'sage/util/range-parser-test.html',
+  'sage/cron/scheduler-test.html',
+  'sage/cron/job-test.html',
+  'sage/cron/syntax/increment-parser-test.html',
+  'sage/cron/syntax/comma-parser-test.html',
+  'sage/cron/syntax/alias-parser-test.html',
+  'sage/cron/syntax/all-parser-test.html',
+  'sage/cron/syntax/range-parser-test.html',
+  'sage/cron/syntax/single-parser-test.html',
+  'sage/cron/parsers-test.html',
+  'sage/cron/spec-test.html',
+  'sage/cron/base-test.html'
+];
