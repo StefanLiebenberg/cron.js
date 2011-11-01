@@ -13,13 +13,13 @@ _This documentations is incomplete, send me a message on github if you have any 
 
 ## About
 
-**cron.js** is a cron scheduler for JavaScript. It allows you to run jobs at specific intervals, defined by standard cron syntax. These intervals range from specific months to every second.
+**cron.js** is a cron scheduler for JavaScript. It allows you to run jobs at set intervals, defined by standard cron syntax.
 
 
 ## Getting the code:
  
 
-Grab one of the files in that directory:
+Grab one of the files in this directory:
 
   https://github.com/StefanLiebenberg/cron.js/tree/master/build
   
@@ -30,25 +30,27 @@ These files should be there:
   *  cron.src.js      - unminified source code + required closure functions.
   
 
-## Make script:
+## Makefile script:
+
+This project uses a makefile to build the required scripts. The following tasks are usefull:
 
 Create the cron.compiled.js file:
 
 ```shell
 make buid/cron.compiled.js
-```
+``` 
 
 Create the cron.min.js file:
 
 ```shell
 make build/cron.min.js
-```
+``` 
 
-Create the cron.src.js files
+Create the cron.src.js file:
 
 ```shell
 make build/cron.src.js
-```
+``` 
 
 
 Usage:
@@ -58,25 +60,21 @@ Usage is inteded to basic. There are three main objects: Cron, Cron.Job, Cron.Sp
 
 * Cron      - Job Scheduler. Manages cron jobs.
 * Cron.Job  - Cron Job. Contains a schedule and block information for each job.
-* Cron.Spec - Cron Specification. Inteprets cron-syntax and contains the logic for calculating date intervals.
-
-
-You will only need to know about Cron and Crontab.
+* Cron.Spec - Cron Specification. Inteprets cron-syntax and contains the logic for calculating date intervals, etc.
 
 ###Cron
-
 
 ```javascript
 var cron = new Cron();
 cron.start();
 cron.add( cronjob );
-```
+``` 
 
 ###Cron.Spec
 
 ```javascript
 var spec = new Cron.Spec( '0 0 * * * mon-wed' ) // every minute hour from monday to wednesday;
-```
+``` 
 
 ###Cron.Job
 
@@ -84,20 +82,19 @@ var spec = new Cron.Spec( '0 0 * * * mon-wed' ) // every minute hour from monday
 var cronjob = new Cron.Job(new Cron.Spec( '*/10 * * * * *' ), function () {
   console.log('running job');
 });
-```
+``` 
 
 
-```
+```javascript
 Cron.Job( spec, block );
 @param {string|Cron.Spec} spec spec can be a Cron.Spec object or just a plain string.
 @param {Function} block block must be a function.
-```
+``` 
 
 
 ## Syntax:
 
-
-The general syntax looks like this:
+The general syntax for cron.js looks like this:
 
 ```javascript
 // Sec Min Hour Day Month Weekday  
@@ -128,7 +125,7 @@ Whereas **hours** will only accept numbers between 0-23;
   
 ### Interval
   A interval is a range and a number seperated by "/". The range specifies the group of values, and number speciefies every nth value to take from that range.  
-  _eg. `0-10/2` would indicate every 2nd number from 0 to 10, therefore 0,2,4,6,8,10_
+  _eg. `0-10/2` would indicate every 2nd number from 0 to 10, therefore [0,2,4,6,8,10]_
 
 ### Lists
   Lists are either ranges, numbers, or intervals seperated by commas. eg. `10-30,23,30-40/2`;
@@ -141,4 +138,4 @@ var schedule = "0 0 0 * * 2-6"; // 00:00:00 on every weeday
 new Cron.Job( schedule, function () {
   // do stuff here
 });
-```
+``` 
