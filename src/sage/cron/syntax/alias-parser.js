@@ -23,7 +23,7 @@ goog.inherits(sage.cron.syntax.AliasParser, sage.util.StringParser);
  * @param {sage.cron.SpecParser} parser the spec_parser.
  * @return {Array.<number>} return an array of numbers.
  */
-sage.cron.AliasSpecParser.prototype.parse;
+sage.cron.syntax.AliasParser.prototype.parse;
 
 
 /**

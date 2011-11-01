@@ -58,7 +58,7 @@ sage.cron.Job.prototype.calcNextAt_ = function() {
 
 
 /**
- * @param {Date|undefined} date get the timeout from date.
+ * @param {?Date} date get the timeout from date.
  * @return {number} returns the timeout value.
  */
 sage.cron.Job.prototype.getNextTimeout = function(date) {
