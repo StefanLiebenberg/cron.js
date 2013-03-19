@@ -2627,10 +2627,11 @@ sage.cron.Spec.prototype.next = function(date) {
           break;
         }
       }
+      next.setMilliseconds(0);
+      next.setSeconds(0);
+      next.setMinutes(0);
       if (flag) {
         sage.util.date.addDays(next, 1);
-        next.setSeconds(0);
-        next.setMinutes(0);
         next.setHours(0);
         continue;
       }
