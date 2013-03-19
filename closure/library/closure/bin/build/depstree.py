@@ -126,9 +126,7 @@ class DepsTree(object):
     traversal_path.append(required_namespace)
 
     for require in source.requires:
-      require_source = provides_map.get(require)
-      if require_source and require_source in deps_list:
-        continue
+
       # Append all other dependencies before we append our own.
       DepsTree._ResolveDependencies(require, deps_list, provides_map,
                                     traversal_path)

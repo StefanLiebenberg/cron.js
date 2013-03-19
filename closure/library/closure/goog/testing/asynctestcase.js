@@ -159,7 +159,7 @@ goog.testing.AsyncTestCase.ControlBreakingException.prototype.
     isControlBreakingException = true;
 
 
-/** @inheritDoc */
+/** @override */
 goog.testing.AsyncTestCase.ControlBreakingException.prototype.toString =
     function() {
   // This shows up in the console when the exception is not caught.
@@ -352,8 +352,8 @@ goog.testing.AsyncTestCase.prototype.continueTesting = function() {
 
 /**
  * Handles an exception thrown by a test.
- * @param {string|Error=} opt_e The exception object associated with the
- *     failure or a string.
+ * @param {*=} opt_e The exception object associated with the failure
+ *     or a string.
  * @throws Always throws a ControlBreakingException.
  */
 goog.testing.AsyncTestCase.prototype.doAsyncError = function(opt_e) {

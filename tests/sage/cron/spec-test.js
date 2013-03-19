@@ -4,7 +4,7 @@ goog.require('sage.cron.Spec');
 goog.require('sage.util.Range');
 
 
-function assertSpecArraysEquals(specA, specB ) {
+function assertSpecArraysEquals(specA, specB) {
   assertTrue(specA instanceof sage.cron.Spec);
   assertTrue(specB instanceof sage.cron.Spec);
 
@@ -26,11 +26,11 @@ function testSpec() {
 
   var days_range = new sage.util.Range(1, 31);
   var days_array = days_range.getValues();
-  
-  var months_range = new sage.util.Range(1,12);
+
+  var months_range = new sage.util.Range(1, 12);
   var months_array = months_range.getValues();
-  
-  var weekdays_range = new sage.util.Range(1,7);
+
+  var weekdays_range = new sage.util.Range(1, 7);
   var weekdays_array = weekdays_range.getValues();
 
   assertArrayEquals(seconds_array, spec.seconds);
@@ -42,14 +42,14 @@ function testSpec() {
 }
 
 function testsSpecParse() {
-  var specA = new sage.cron.Spec( "@daily" );
-  var specB = sage.cron.Spec.parse( "@daily" );
-  assertSpecArraysEquals( specA, specB );
+  var specA = new sage.cron.Spec("@daily");
+  var specB = sage.cron.Spec.parse("@daily");
+  assertSpecArraysEquals(specA, specB);
 };
 
-function testSpecNext () {
+function testSpecNext() {
   var expected, actual;
-  
+
   expected = [
     new Date(951775200000),
     new Date(1078005600000),
@@ -58,20 +58,43 @@ function testSpecNext () {
     new Date(1456696800000),
     new Date(1582927200000)
   ];
-  
-  actual  = [];
-  
-  
-  var spec = new sage.cron.Spec( '0 0 0 29 2 *' );
+
+  actual = [];
+
+
+  var spec = new sage.cron.Spec('0 0 0 29 2 *');
   var a = 946677600000; // jan 1 2000
   var b = 1577829600000; // jan 1 2020
-  
+
   var date = new Date(a);
-  var last  = new Date(b);
-  while( date < last ) {
-    date = spec.next( date );
-    actual.push( date );
-  };
-  
-  assertArrayEquals( expected, actual );
+  var last = new Date(b);
+  while (date < last) {
+    date = spec.next(date);
+    actual.push(date);
+  }
+  ;
+
+  assertArrayEquals(expected, actual);
+}
+
+
+function testIssue01() {
+  // assume it's 19:32:24
+  var now = new Date();
+  now.setHours(19);
+  now.setMinutes(32);
+  now.setSeconds(24);
+
+  var expected = new Date();
+  expected.setTime(now.getTime());
+  expected.setHours(20);
+  expected.setMinutes(0);
+  expected.setSeconds(0);
+
+  var spec =
+    new sage.cron.Spec("* * 20 * * *");
+
+  var next = spec.next(now);
+
+  assertEquals(expected.toString(), next.toString());
 }
