@@ -17,6 +17,7 @@
  * invoked after a delay, especially when that delay is frequently restarted.
  * Examples include delaying before displaying a tooltip, menu hysteresis,
  * idle timers, etc.
+ * @author brenneman@google.com (Shawn Brenneman)
  * @see ../demos/timers.html
  */
 
@@ -41,6 +42,7 @@ goog.require('goog.Timer');
  * @param {Object=} opt_handler The object scope to invoke the function in.
  * @constructor
  * @extends {goog.Disposable}
+ * @final
  */
 goog.async.Delay = function(listener, opt_interval, opt_handler) {
   goog.Disposable.call(this);
@@ -82,6 +84,7 @@ goog.inherits(goog.async.Delay, goog.Disposable);
  * A deprecated alias.
  * @deprecated Use goog.async.Delay instead.
  * @constructor
+ * @final
  */
 goog.Delay = goog.async.Delay;
 

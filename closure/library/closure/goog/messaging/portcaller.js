@@ -40,6 +40,7 @@ goog.require('goog.object');
  * @constructor
  * @extends {goog.Disposable}
  * @implements {goog.messaging.PortNetwork}
+ * @final
  */
 goog.messaging.PortCaller = function(operatorPort) {
   goog.base(this);
@@ -113,11 +114,12 @@ goog.messaging.PortCaller.prototype.dial = function(name) {
  * case. However, the first channel created will reach both contexts first, so
  * we simply ignore all connections with a given context after the first.
  *
- * @param {{name: string, port: MessagePort}} args The name of the context
+ * @param {!Object|string} message The name of the context
  *     being connected and the port connecting the context.
  * @private
  */
-goog.messaging.PortCaller.prototype.connectionGranted_ = function(args) {
+goog.messaging.PortCaller.prototype.connectionGranted_ = function(message) {
+  var args = /** @type {{name: string, port: MessagePort}} */ (message);
   var port = args['port'];
   var entry = this.connections_[args['name']];
   if (entry && (!entry.deferred || entry.deferred.hasFired())) {

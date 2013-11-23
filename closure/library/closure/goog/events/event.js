@@ -19,8 +19,23 @@
 
 
 goog.provide('goog.events.Event');
+goog.provide('goog.events.EventLike');
 
+// goog.events.Event no longer depends on goog.Disposable. Keep requiring
+// goog.Disposable here to not break projects which assume this dependency.
 goog.require('goog.Disposable');
+goog.require('goog.events.EventId');
+
+
+/**
+ * A typedef for event like objects that are dispatchable via the
+ * goog.events.dispatchEvent function. strings are treated as the type for a
+ * goog.events.Event. Objects are treated as an extension of a new
+ * goog.events.Event with the type property of the object being used as the type
+ * of the Event.
+ * @typedef {string|Object|goog.events.Event|goog.events.EventId}
+ */
+goog.events.EventLike;
 
 
 
@@ -28,21 +43,18 @@ goog.require('goog.Disposable');
  * A base class for event objects, so that they can support preventDefault and
  * stopPropagation.
  *
- * @param {string} type Event Type.
+ * @param {string|!goog.events.EventId} type Event Type.
  * @param {Object=} opt_target Reference to the object that is the target of
  *     this event. It has to implement the {@code EventTarget} interface
  *     declared at {@link http://developer.mozilla.org/en/DOM/EventTarget}.
  * @constructor
- * @extends {goog.Disposable}
  */
 goog.events.Event = function(type, opt_target) {
-  goog.Disposable.call(this);
-
   /**
    * Event type.
    * @type {string}
    */
-  this.type = type;
+  this.type = type instanceof goog.events.EventId ? String(type) : type;
 
   /**
    * Target of the event.
@@ -56,31 +68,52 @@ goog.events.Event = function(type, opt_target) {
    */
   this.currentTarget = this.target;
 };
-goog.inherits(goog.events.Event, goog.Disposable);
 
 
-/** @override */
+/**
+ * For backwards compatibility (goog.events.Event used to inherit
+ * goog.Disposable).
+ * @deprecated Events don't need to be disposed.
+ */
 goog.events.Event.prototype.disposeInternal = function() {
-  delete this.type;
-  delete this.target;
-  delete this.currentTarget;
+};
+
+
+/**
+ * For backwards compatibility (goog.events.Event used to inherit
+ * goog.Disposable).
+ * @deprecated Events don't need to be disposed.
+ */
+goog.events.Event.prototype.dispose = function() {
 };
 
 
 /**
  * Whether to cancel the event in internal capture/bubble processing for IE.
  * @type {boolean}
- * @suppress {underscore} Technically public, but referencing this outside
- *     this package is strongly discouraged.
+ * @public
+ * @suppress {underscore|visibility} Technically public, but referencing this
+ *     outside this package is strongly discouraged.
  */
 goog.events.Event.prototype.propagationStopped_ = false;
 
 
 /**
+ * Whether the default action has been prevented.
+ * This is a property to match the W3C specification at {@link
+ * http://www.w3.org/TR/DOM-Level-3-Events/#events-event-type-defaultPrevented}.
+ * Must be treated as read-only outside the class.
+ * @type {boolean}
+ */
+goog.events.Event.prototype.defaultPrevented = false;
+
+
+/**
  * Return value for in internal capture/bubble processing for IE.
  * @type {boolean}
- * @suppress {underscore} Technically public, but referencing this outside
- *     this package is strongly discouraged.
+ * @public
+ * @suppress {underscore|visibility} Technically public, but referencing this
+ *     outside this package is strongly discouraged.
  */
 goog.events.Event.prototype.returnValue_ = true;
 
@@ -97,6 +130,7 @@ goog.events.Event.prototype.stopPropagation = function() {
  * Prevents the default action, for example a link redirecting to a url.
  */
 goog.events.Event.prototype.preventDefault = function() {
+  this.defaultPrevented = true;
   this.returnValue_ = false;
 };
 

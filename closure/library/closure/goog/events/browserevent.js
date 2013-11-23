@@ -34,6 +34,7 @@
  * - altKey         {boolean}   Was alt key depressed
  * - shiftKey       {boolean}   Was shift key depressed
  * - metaKey        {boolean}   Was meta key depressed
+ * - defaultPrevented {boolean} Whether the default action has been prevented
  * - state          {Object}    History state object
  *
  * NOTE: The keyCode member contains the raw browser keyCode. For normalized
@@ -59,7 +60,7 @@ goog.require('goog.userAgent');
  * The content of this object will not be initialized if no event object is
  * provided. If this is the case, init() needs to be invoked separately.
  * @param {Event=} opt_e Browser event object.
- * @param {Node=} opt_currentTarget Current target for event.
+ * @param {EventTarget=} opt_currentTarget Current target for event.
  * @constructor
  * @extends {goog.events.Event}
  */
@@ -217,7 +218,7 @@ goog.events.BrowserEvent.prototype.state;
 
 /**
  * Whether the default platform modifier key was pressed at time of event.
- * (This is control for all platforms except Mac, where it's Meta.
+ * (This is control for all platforms except Mac, where it's Meta.)
  * @type {boolean}
  */
 goog.events.BrowserEvent.prototype.platformModifierKey = false;
@@ -235,7 +236,7 @@ goog.events.BrowserEvent.prototype.event_ = null;
  * Accepts a browser event object and creates a patched, cross browser event
  * object.
  * @param {Event} e Browser event object.
- * @param {Node=} opt_currentTarget Current target for event.
+ * @param {EventTarget=} opt_currentTarget Current target for event.
  */
 goog.events.BrowserEvent.prototype.init = function(e, opt_currentTarget) {
   var type = this.type = e.type;
@@ -244,7 +245,8 @@ goog.events.BrowserEvent.prototype.init = function(e, opt_currentTarget) {
   // TODO(nicksantos): Change this.target to type EventTarget.
   this.target = /** @type {Node} */ (e.target) || e.srcElement;
 
-  this.currentTarget = opt_currentTarget;
+  // TODO(nicksantos): Change this.currentTarget to type EventTarget.
+  this.currentTarget = /** @type {Node} */ (opt_currentTarget);
 
   var relatedTarget = /** @type {Node} */ (e.relatedTarget);
   if (relatedTarget) {
@@ -257,7 +259,7 @@ goog.events.BrowserEvent.prototype.init = function(e, opt_currentTarget) {
         relatedTarget = null;
       }
     }
-    // TODO(user): Use goog.events.EventType when it has been refactored into its
+    // TODO(arv): Use goog.events.EventType when it has been refactored into its
     // own file.
   } else if (type == goog.events.EventType.MOUSEOVER) {
     relatedTarget = e.fromElement;
@@ -267,8 +269,13 @@ goog.events.BrowserEvent.prototype.init = function(e, opt_currentTarget) {
 
   this.relatedTarget = relatedTarget;
 
-  this.offsetX = e.offsetX !== undefined ? e.offsetX : e.layerX;
-  this.offsetY = e.offsetY !== undefined ? e.offsetY : e.layerY;
+  // Webkit emits a lame warning whenever layerX/layerY is accessed.
+  // http://code.google.com/p/chromium/issues/detail?id=101733
+  this.offsetX = (goog.userAgent.WEBKIT || e.offsetX !== undefined) ?
+      e.offsetX : e.layerX;
+  this.offsetY = (goog.userAgent.WEBKIT || e.offsetY !== undefined) ?
+      e.offsetY : e.layerY;
+
   this.clientX = e.clientX !== undefined ? e.clientX : e.pageX;
   this.clientY = e.clientY !== undefined ? e.clientY : e.pageY;
   this.screenX = e.screenX || 0;
@@ -285,7 +292,9 @@ goog.events.BrowserEvent.prototype.init = function(e, opt_currentTarget) {
   this.platformModifierKey = goog.userAgent.MAC ? e.metaKey : e.ctrlKey;
   this.state = e.state;
   this.event_ = e;
-  delete this.returnValue_;
+  if (e.defaultPrevented) {
+    this.preventDefault();
+  }
   delete this.propagationStopped_;
 };
 
@@ -399,9 +408,4 @@ goog.events.BrowserEvent.prototype.getBrowserEvent = function() {
 
 /** @override */
 goog.events.BrowserEvent.prototype.disposeInternal = function() {
-  goog.events.BrowserEvent.superClass_.disposeInternal.call(this);
-  this.event_ = null;
-  this.target = null;
-  this.currentTarget = null;
-  this.relatedTarget = null;
 };

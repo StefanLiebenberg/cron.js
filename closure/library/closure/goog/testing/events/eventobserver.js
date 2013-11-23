@@ -29,6 +29,7 @@
  * assertEquals(2, observer.getEvents('submit').length);
  * </pre>
  *
+ * @author nnaze@google.com (Nathan Naze)
  */
 
 goog.provide('goog.testing.events.EventObserver');
@@ -43,6 +44,7 @@ goog.require('goog.array');
  * @see goog.events.listen
  * @see goog.events.EventHandler
  * @constructor
+ * @final
  */
 goog.testing.events.EventObserver = function() {
 

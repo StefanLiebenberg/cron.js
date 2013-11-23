@@ -7,6 +7,7 @@ Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
 <!--
+Author: attila@google.com (Attila Bodis)
 -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,8 +15,8 @@ See the COPYING file for details.
   <script src="../base.js"></script>
   <script>
     goog.require('goog.dom');
-    goog.require('goog.dom.a11y.Role');
-    goog.require('goog.dom.classes');
+    goog.require('goog.a11y.aria.Role');
+    goog.require('goog.dom.classlist');
     goog.require('goog.testing.jsunit');
     goog.require('goog.ui.Container.Orientation');
     goog.require('goog.ui.Tab');
@@ -52,7 +53,7 @@ See the COPYING file for details.
 
     function testGetAriaRole() {
       assertEquals('getAriaRole() must return expected value',
-          goog.dom.a11y.Role.TAB_LIST, renderer.getAriaRole());
+          goog.a11y.aria.Role.TAB_LIST, renderer.getAriaRole());
     }
 
     function testCreateDom() {
@@ -61,7 +62,7 @@ See the COPYING file for details.
       assertEquals('Created element must be a DIV', 'DIV', element.tagName);
       assertSameElements('Created element must have expected class names',
           ['goog-tab-bar', 'goog-tab-bar-horizontal', 'goog-tab-bar-top'],
-          goog.dom.classes.get(element));
+          goog.dom.classlist.get(element));
     }
 
     function testDecorate() {
@@ -71,10 +72,10 @@ See the COPYING file for details.
       assertEquals('Decorated element must be as expected',
           goog.dom.getElement('start'), element);
       // Due to a bug in ContainerRenderer, the "-vertical" class isn't applied.
-      // TODO(user): Fix this!
+      // TODO(attila): Fix this!
       assertSameElements('Decorated element must have expected class names',
           ['goog-tab-bar', 'goog-tab-bar-start'],
-          goog.dom.classes.get(element));
+          goog.dom.classlist.get(element));
     }
 
     function testSetStateFromClassName() {

@@ -1,37 +1,32 @@
 goog.provide('sage.cron.syntax.CommaParser');
-goog.require('sage.util.StringParser');
+goog.require('sage.cron.syntax.AbstractParser');
 
 
 
 /**
  * @constructor
- * @extends {sage.util.StringParser}
+ * @extends { sage.cron.syntax.AbstractParser}
+ * @param {sage.cron.SpecParser} parser
  */
-sage.cron.syntax.CommaParser = function() {
-  var regexp = /\,/;
-  goog.base(this, regexp);
+sage.cron.syntax.CommaParser = function(parser) {
+  goog.base(this, parser, /\,/);
 };
-goog.inherits(sage.cron.syntax.CommaParser, sage.util.StringParser);
+goog.inherits(sage.cron.syntax.CommaParser, sage.cron.syntax.AbstractParser);
 
 
-/**
- * @param {string} spec the specification string.
- * @param {sage.cron.SpecParser} parser the spec_parser.
- * @return {Array.<number>} return an array of numbers.
- */
-sage.cron.syntax.CommaParser.prototype.parseInternal = function(spec, parser) {
-
-  var parts, results, len;
+/** @override */
+sage.cron.syntax.CommaParser.prototype.parse = function(spec) {
 
   /** @type {Array.<string>} */
-  parts = spec.split(',');
+  var parts = spec.split(',');
   /** @type {number} */
-  len = parts.length;
-  /** @type {Array.<number>} */
-  results = [];
+  var len = parts.length;
+  /** @type {!Array.<number>} */
+  var results = [];
 
   for (var i = 0; i < len; i++) {
-    results.push.apply(results, parser.parse(parts[i]));
+    results.push.apply(results, this.parser.parse(parts[i]));
   }
+
   return results;
 };

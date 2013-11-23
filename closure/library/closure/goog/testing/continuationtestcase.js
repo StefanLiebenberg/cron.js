@@ -74,6 +74,7 @@
  * }
  * </pre>
  *
+ * @author brenneman@google.com (Shawn Brenneman)
  */
 
 
@@ -97,6 +98,7 @@ goog.require('goog.testing.asserts');
  * @param {string=} opt_name Optional name for the test case.
  * @constructor
  * @extends {goog.testing.TestCase}
+ * @final
  */
 goog.testing.ContinuationTestCase = function(opt_name) {
   goog.testing.TestCase.call(this, opt_name);
@@ -288,7 +290,13 @@ goog.testing.ContinuationTestCase.prototype.runNextStep_ = function() {
 
 
 /**
- * Creates a new test step that will run after a user-specified timeout.
+ * Creates a new test step that will run after a user-specified
+ * timeout.  No guarantee is made on the execution order of the
+ * continuation, except for those provided by each browser's
+ * window.setTimeout. In particular, if two continuations are
+ * registered at the same time with very small delta for their
+ * durations, this class can not guarantee that the continuation with
+ * the smaller duration will be executed first.
  * @param {Function} continuation The test function to invoke after the timeout.
  * @param {number=} opt_duration The length of the timeout in milliseconds.
  */
@@ -467,6 +475,7 @@ goog.testing.ContinuationTestCase.prototype.testCondition_ = function(
  *     after the test method completes or fails.
  * @constructor
  * @extends {goog.testing.TestCase.Test}
+ * @final
  */
 goog.testing.ContinuationTestCase.Test = function(setUp, test, tearDown) {
   // This test container has a name, but no evaluation function or scope.
@@ -608,6 +617,7 @@ goog.testing.ContinuationTestCase.Test.prototype.cancelPhase_ =
  * @param {Object=} opt_scope The object context to run the test in.
  * @constructor
  * @extends {goog.testing.TestCase.Test}
+ * @final
  */
 goog.testing.ContinuationTestCase.Step = function(name, ref, opt_scope) {
   goog.testing.TestCase.Test.call(this, name, ref, opt_scope);

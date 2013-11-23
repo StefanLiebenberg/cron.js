@@ -51,3 +51,10 @@ lint:
 	gjslint --strict -r src
 
 _ALWAYS:
+
+
+cli-compile: 
+	java -jar bin/closure-cli.jar --config config/closure-compiled.yaml build javascript --compile
+
+cli-test:
+	java -jar bin/closure-cli.jar --config config/closure-compiled.yaml test

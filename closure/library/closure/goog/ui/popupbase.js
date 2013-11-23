@@ -23,12 +23,12 @@ goog.provide('goog.ui.PopupBase.Type');
 
 goog.require('goog.Timer');
 goog.require('goog.dom');
+goog.require('goog.events');
 goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
 goog.require('goog.fx.Transition');
-goog.require('goog.fx.Transition.EventType');
 goog.require('goog.style');
 goog.require('goog.userAgent');
 
@@ -379,6 +379,19 @@ goog.ui.PopupBase.prototype.getLastHideTime = function() {
 
 
 /**
+ * Returns the event handler for the popup. All event listeners belonging to
+ * this handler are removed when the tooltip is hidden. Therefore,
+ * the recommended usage of this handler is to listen on events in
+ * {@link #onShow_}.
+ * @return {goog.events.EventHandler} Event handler for this popup.
+ * @protected
+ */
+goog.ui.PopupBase.prototype.getHandler = function() {
+  return this.handler_;
+};
+
+
+/**
  * Helper to throw exception if the popup is showing.
  * @private
  */
@@ -426,7 +439,9 @@ goog.ui.PopupBase.prototype.isOrWasRecentlyVisible = function() {
 
 
 /**
- * Sets whether the popup should be visible.
+ * Sets whether the popup should be visible. After this method
+ * returns, isVisible() will always return the new state, even if
+ * there is a transition.
  *
  * @param {boolean} visible Desired visibility state.
  */
@@ -548,6 +563,9 @@ goog.ui.PopupBase.prototype.show_ = function() {
   }
   this.isVisible_ = true;
 
+  this.lastShowTime_ = goog.now();
+  this.lastHideTime_ = -1;
+
   // If there is transition to play, we play it and fire SHOW event after
   // the transition is over.
   if (this.showTransition_) {
@@ -579,6 +597,10 @@ goog.ui.PopupBase.prototype.hide_ = function(opt_target) {
   if (this.handler_) {
     this.handler_.removeAll();
   }
+
+  // Set visibility to hidden even if there is a transition.
+  this.isVisible_ = false;
+  this.lastHideTime_ = goog.now();
 
   // If there is transition to play, we play it and only hide the element
   // (and fire HIDE event) after the transition is over.
@@ -613,7 +635,6 @@ goog.ui.PopupBase.prototype.continueHidingPopup_ = function(opt_target) {
   } else if (this.type_ == goog.ui.PopupBase.Type.MOVE_OFFSCREEN) {
     this.moveOffscreen_();
   }
-  this.isVisible_ = false;
 
   // Notify derived classes and handlers.
   this.onHide_(opt_target);
@@ -626,7 +647,7 @@ goog.ui.PopupBase.prototype.continueHidingPopup_ = function(opt_target) {
  */
 goog.ui.PopupBase.prototype.showPopupElement = function() {
   this.element_.style.visibility = 'visible';
-  goog.style.showElement(this.element_, true);
+  goog.style.setElementShown(this.element_, true);
 };
 
 
@@ -636,7 +657,7 @@ goog.ui.PopupBase.prototype.showPopupElement = function() {
  */
 goog.ui.PopupBase.prototype.hidePopupElement_ = function() {
   this.element_.style.visibility = 'hidden';
-  goog.style.showElement(this.element_, false);
+  goog.style.setElementShown(this.element_, false);
 };
 
 
@@ -646,8 +667,7 @@ goog.ui.PopupBase.prototype.hidePopupElement_ = function() {
  * @private
  */
 goog.ui.PopupBase.prototype.moveOffscreen_ = function() {
-  this.element_.style.left = '-200px';
-  this.element_.style.top = '-200px';
+  this.element_.style.top = '-10000px';
 };
 
 
@@ -668,11 +688,9 @@ goog.ui.PopupBase.prototype.onBeforeShow = function() {
  * Called after the popup is shown. Derived classes can override to hook this
  * event but should make sure to call the parent class method.
  * @protected
- * @suppress {underscore}
+ * @suppress {underscore|visibility}
  */
 goog.ui.PopupBase.prototype.onShow_ = function() {
-  this.lastShowTime_ = goog.now();
-  this.lastHideTime_ = -1;
   this.dispatchEvent(goog.ui.PopupBase.EventType.SHOW);
 };
 
@@ -684,11 +702,14 @@ goog.ui.PopupBase.prototype.onShow_ = function() {
  * @param {Object=} opt_target Target of the event causing the hide.
  * @return {boolean} If anyone called preventDefault on the event object (or
  *     if any of the handlers returns false this will also return false.
- * @private
+ * @protected
+ * @suppress {underscore|visibility}
  */
 goog.ui.PopupBase.prototype.onBeforeHide_ = function(opt_target) {
-  return this.dispatchEvent({type: goog.ui.PopupBase.EventType.BEFORE_HIDE,
-                             target: opt_target});
+  return this.dispatchEvent({
+    type: goog.ui.PopupBase.EventType.BEFORE_HIDE,
+    target: opt_target
+  });
 };
 
 
@@ -697,12 +718,13 @@ goog.ui.PopupBase.prototype.onBeforeHide_ = function(opt_target) {
  * event but should make sure to call the parent class method.
  * @param {Object=} opt_target Target of the event causing the hide.
  * @protected
- * @suppress {underscore}
+ * @suppress {underscore|visibility}
  */
 goog.ui.PopupBase.prototype.onHide_ = function(opt_target) {
-  this.lastHideTime_ = goog.now();
-  this.dispatchEvent({type: goog.ui.PopupBase.EventType.HIDE,
-                      target: opt_target});
+  this.dispatchEvent({
+    type: goog.ui.PopupBase.EventType.HIDE,
+    target: opt_target
+  });
 };
 
 
@@ -759,7 +781,7 @@ goog.ui.PopupBase.prototype.onDocumentBlur_ = function(e) {
   // Ignore blur events if the active element is still inside the popup or if
   // there is no longer an active element.  For example, a widget like a
   // goog.ui.Button might programatically blur itself before losing tabIndex.
-  if (goog.userAgent.IE || goog.userAgent.OPERA) {
+  if (typeof document.activeElement != 'undefined') {
     var activeElement = doc.activeElement;
     if (!activeElement || goog.dom.contains(this.element_,
         activeElement) || activeElement.tagName == 'BODY') {

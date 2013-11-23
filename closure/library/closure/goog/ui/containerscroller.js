@@ -14,16 +14,17 @@
 
 /**
  * @fileoverview Scroll behavior that can be added onto a container.
+ * @author gboyer@google.com (Garry Boyer)
  */
 
 goog.provide('goog.ui.ContainerScroller');
 
+goog.require('goog.Disposable');
 goog.require('goog.Timer');
 goog.require('goog.events.EventHandler');
 goog.require('goog.style');
 goog.require('goog.ui.Component');
-goog.require('goog.ui.Component.EventType');
-goog.require('goog.ui.Container.EventType');
+goog.require('goog.ui.Container');
 
 
 
@@ -44,6 +45,7 @@ goog.require('goog.ui.Container.EventType');
  * @param {!goog.ui.Container} container The container to attach behavior to.
  * @constructor
  * @extends {goog.Disposable}
+ * @final
  */
 goog.ui.ContainerScroller = function(container) {
   goog.Disposable.call(this);
@@ -71,7 +73,7 @@ goog.ui.ContainerScroller = function(container) {
   this.eventHandler_.listen(container, goog.ui.Component.EventType.HIDE,
       this.onHide_);
 
-  // TODO(user): Allow a ContainerScroller to be attached with a Container
+  // TODO(gboyer): Allow a ContainerScroller to be attached with a Container
   // before the container is rendered.
 
   this.doScrolling_(true);

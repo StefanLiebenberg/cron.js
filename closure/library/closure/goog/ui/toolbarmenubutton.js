@@ -15,11 +15,12 @@
 /**
  * @fileoverview A toolbar menu button control.
  *
+ * @author attila@google.com (Attila Bodis)
+ * @author ssaviano@google.com (Steven Saviano)
  */
 
 goog.provide('goog.ui.ToolbarMenuButton');
 
-goog.require('goog.ui.ControlContent');
 goog.require('goog.ui.MenuButton');
 goog.require('goog.ui.ToolbarMenuButtonRenderer');
 goog.require('goog.ui.registry');

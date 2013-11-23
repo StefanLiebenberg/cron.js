@@ -5,7 +5,6 @@ goog.provide('sage.cron.SpecMonthParser');
 goog.provide('sage.cron.SpecSecondParser');
 goog.provide('sage.cron.SpecWeekdayParser');
 goog.require('sage.cron.SpecParser');
-goog.require('sage.util.Parser');
 
 
 /** @type {sage.cron.SpecParser} */
@@ -30,44 +29,30 @@ sage.cron.SpecDayParser =
 
 /** @type {sage.cron.SpecParser} */
 sage.cron.SpecMonthParser =
-    new sage.cron.AliasSpecParser(1, 12, '(([0]?[1-9])|([1][0-2]))');
-
-
-/**
- * @const
- * @type {Object.<number>}
- */
-sage.cron.SpecMonthParser.aliases = {
-  'jan': 1,
-  'feb': 2,
-  'mar': 3,
-  'apr': 4,
-  'may': 5,
-  'jun': 6,
-  'jul': 7,
-  'aug': 8,
-  'sep': 9,
-  'oct': 10,
-  'nov': 11,
-  'dec': 12
-};
+    new sage.cron.AliasSpecParser(1, 12, '(([0]?[1-9])|([1][0-2]))', {
+      'jan': 1,
+      'feb': 2,
+      'mar': 3,
+      'apr': 4,
+      'may': 5,
+      'jun': 6,
+      'jul': 7,
+      'aug': 8,
+      'sep': 9,
+      'oct': 10,
+      'nov': 11,
+      'dec': 12
+    });
 
 
 /** @type {sage.cron.SpecParser} */
 sage.cron.SpecWeekdayParser =
-    new sage.cron.AliasSpecParser(1, 7, '([0]?[1-7])');
-
-
-/**
- * @const
- * @type {Object.<number>}
- */
-sage.cron.SpecWeekdayParser.aliases = {
-  'sun': 1,
-  'mon': 2,
-  'tue': 3,
-  'wed': 4,
-  'thu': 5,
-  'fri': 6,
-  'sat': 7
-};
+    new sage.cron.AliasSpecParser(1, 7, '([0]?[1-7])', {
+      'sun': 1,
+      'mon': 2,
+      'tue': 3,
+      'wed': 4,
+      'thu': 5,
+      'fri': 6,
+      'sat': 7
+    });

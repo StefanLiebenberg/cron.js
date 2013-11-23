@@ -7,6 +7,7 @@ Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
 <!--
+Author:  attila@google.com (Attila Bodis)
 -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,8 +15,9 @@ See the COPYING file for details.
   <script src="../base.js"></script>
   <script>
     goog.require('goog.Disposable');
+    goog.require('goog.a11y.aria');
     goog.require('goog.dom');
-    goog.require('goog.dom.classes');
+    goog.require('goog.dom.classlist');
     goog.require('goog.testing.events');
     goog.require('goog.testing.jsunit');
     goog.require('goog.ui.Container');
@@ -39,8 +41,8 @@ See the COPYING file for details.
 
       sandbox.innerHTML =
           '<div id="containerElement" class="goog-container">\n' +
-          '  <div class="goog-control">Hello</div>\n' +
-          '  <div class="goog-control">World</div>\n' +
+          '  <div class="goog-control" id="hello">Hello</div>\n' +
+          '  <div class="goog-control" id="world">World</div>\n' +
           '</div>';
       containerElement = goog.dom.getElement('containerElement');
     }
@@ -48,7 +50,6 @@ See the COPYING file for details.
     function tearDown() {
       goog.dom.removeChildren(sandbox);
       container.dispose();
-      goog.events.removeAll();
       goog.dispose(keyContainer);
       goog.dispose(listContainer);
     }
@@ -66,7 +67,7 @@ See the COPYING file for details.
     }
 
     function testDecorateDisabled() {
-      goog.dom.classes.add(containerElement, 'goog-container-disabled');
+      goog.dom.classlist.add(containerElement, 'goog-container-disabled');
 
       assertTrue('Container must be enabled', container.isEnabled());
       container.decorate(containerElement);
@@ -114,6 +115,9 @@ See the COPYING file for details.
           container.getChildAt(0).getElement(), sandbox);
       assertTrue('Child 0 should become highlighted after a mouse over',
           container.getChildAt(0).isHighlighted());
+      assertEquals('Child 0 should be the active descendant',
+          container.getChildAt(0).getElement(),
+          goog.a11y.aria.getActiveDescendant(container.getElement()));
 
       goog.testing.events.fireMouseOverEvent(
           container.getChildAt(1).getElement(),
@@ -123,6 +127,9 @@ See the COPYING file for details.
           container.getChildAt(0).isHighlighted());
       assertTrue('Child 1 should now be highlighted.',
           container.getChildAt(1).isHighlighted());
+      assertEquals('Child 1 should be the active descendant',
+          container.getChildAt(1).getElement(),
+          goog.a11y.aria.getActiveDescendant(container.getElement()));
     }
 
     function testHighlightOnEnterPreventable() {
@@ -444,6 +451,19 @@ See the COPYING file for details.
           container.getChild('a'));
       assertTrue('The removed control must handle its own mouse events',
           a.isHandleMouseEvents());
+    }
+
+    function testRemoveHighlightedDisposedChild() {
+      goog.dom.removeChildren(containerElement);
+      container.decorate(containerElement);
+
+      var a = new goog.ui.Control('A');
+      container.addChild(a, true);
+
+      container.setHighlightedIndex(0);
+      a.dispose();
+      container.removeChild(a);
+      container.dispose();
     }
   </script>
 </body>

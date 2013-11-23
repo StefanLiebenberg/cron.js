@@ -15,6 +15,7 @@
 
 /**
  * @fileoverview Represents a font to be used with a Renderer.
+ * @author arv@google.com (Erik Arvidsson)
  * @see ../demos/graphics/basicelements.html
  */
 
@@ -28,6 +29,10 @@ goog.provide('goog.graphics.Font');
  * @param {number} size  The font size.
  * @param {string} family  The font family.
  * @constructor
+ * @deprecated goog.graphics is deprecated. It existed to abstract over browser
+ *     differences before the canvas tag was widely supported.  See
+ *     http://en.wikipedia.org/wiki/Canvas_element for details.
+ * @final
  */
 goog.graphics.Font = function(size, family) {
   /**
@@ -35,7 +40,7 @@ goog.graphics.Font = function(size, family) {
    * @type {number}
    */
   this.size = size;
-  // TODO(user): Is this in pixels or drawing units based on the coord size?
+  // TODO(arv): Is this in pixels or drawing units based on the coord size?
 
   /**
    * The name of the font family to use, can be a comma separated string.

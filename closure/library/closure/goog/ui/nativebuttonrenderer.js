@@ -15,14 +15,16 @@
 /**
  * @fileoverview Native browser button renderer for {@link goog.ui.Button}s.
  *
+ * @author attila@google.com (Attila Bodis)
  */
 
 goog.provide('goog.ui.NativeButtonRenderer');
 
-goog.require('goog.dom.classes');
+goog.require('goog.asserts');
+goog.require('goog.dom.classlist');
 goog.require('goog.events.EventType');
 goog.require('goog.ui.ButtonRenderer');
-goog.require('goog.ui.Component.State');
+goog.require('goog.ui.Component');
 
 
 
@@ -86,8 +88,9 @@ goog.ui.NativeButtonRenderer.prototype.decorate = function(button, element) {
   if (element.disabled) {
     // Add the marker class for the DISABLED state before letting the superclass
     // implementation decorate the element, so its state will be correct.
-    goog.dom.classes.add(element,
+    var disabledClassName = goog.asserts.assertString(
         this.getClassForState(goog.ui.Component.State.DISABLED));
+    goog.dom.classlist.add(element, disabledClassName);
   }
   return goog.ui.NativeButtonRenderer.superClass_.decorate.call(this, button,
       element);
@@ -95,9 +98,9 @@ goog.ui.NativeButtonRenderer.prototype.decorate = function(button, element) {
 
 
 /**
- * @override
  * Native buttons natively support BiDi and keyboard focus.
  * @suppress {visibility} getHandler and performActionInternal
+ * @override
  */
 goog.ui.NativeButtonRenderer.prototype.initializeDom = function(button) {
   // WARNING:  This is a hack, and it is only applicable to native buttons,
@@ -162,7 +165,7 @@ goog.ui.NativeButtonRenderer.prototype.setState = function(button, state,
  * attribute.
  */
 goog.ui.NativeButtonRenderer.prototype.getValue = function(element) {
-  // TODO(user): Make this work on IE!  This never worked...
+  // TODO(attila): Make this work on IE!  This never worked...
   // See http://www.fourmilab.ch/fourmilog/archives/2007-03/000824.html
   // for a description of the problem.
   return element.value;
@@ -176,7 +179,7 @@ goog.ui.NativeButtonRenderer.prototype.getValue = function(element) {
  */
 goog.ui.NativeButtonRenderer.prototype.setValue = function(element, value) {
   if (element) {
-    // TODO(user): Make this work on IE!  This never worked...
+    // TODO(attila): Make this work on IE!  This never worked...
     // See http://www.fourmilab.ch/fourmilog/archives/2007-03/000824.html
     // for a description of the problem.
     element.value = value;

@@ -32,7 +32,17 @@ This test has not yet been updated to run on IE8. See http://b/hotlist?id=36311
 </head>
 <body>
 
+<!--
+This wrapper table is outside the mock editor and only used ensure that it is
+ignored by the tests.
+-->
+<table>
+<tr>
+<td>
 <div id="html"></div>
+</td>
+</tr>
+</table>
 
 <div id="abcde">abcde</div>
 
@@ -43,7 +53,29 @@ This test has not yet been updated to run on IE8. See http://b/hotlist?id=36311
   var testHelper;
 
   var WEBKIT_BEFORE_CHROME_8 = goog.userAgent.WEBKIT &&
-      !goog.userAgent.isVersion('534.10');
+      !goog.userAgent.isVersionOrHigher('534.10');
+
+  var WEBKIT_AFTER_CHROME_16 = goog.userAgent.WEBKIT &&
+      goog.userAgent.isVersionOrHigher('535.7');
+
+  var WEBKIT_AFTER_CHROME_21 = goog.userAgent.WEBKIT &&
+      goog.userAgent.isVersionOrHigher('537.1');
+
+  // On Chrome 16, execCommand('insertImage') inserts a garbage BR
+  // after the image that we insert. We use this command to paste HTML
+  // in-place, because it has better paragraph-preserving semantics.
+  //
+  // TODO(nicksantos): Figure out if there are better chrome APIs that we
+  // should be using, or if insertImage should just be fixed.
+  var insertImageBoldGarbage = '';
+  var insertImageFontGarbage = '';
+  if (WEBKIT_AFTER_CHROME_21) {
+    insertImageBoldGarbage = '<br>';
+    insertImageFontGarbage = '<br>';
+  } else if (WEBKIT_AFTER_CHROME_16) {
+    insertImageBoldGarbage = '<b><br/></b>';
+    insertImageFontGarbage = '<font size="1"><br/></font>';
+  }
 
   // Extra html to add to test html to make sure removeformatting is actually
   // getting called when you're testing if it leaves certain styles alone
@@ -412,7 +444,7 @@ This test has not yet been updated to run on IE8. See http://b/hotlist?id=36311
 
     expectedFailures.run(function() {
       FORMATTER.removeFormatting_();
-      assertHTMLEquals("bolditalic",
+      assertHTMLEquals("bolditalic" + insertImageBoldGarbage,
           div.innerHTML);
       FIELDMOCK.$verify();
     });
@@ -532,7 +564,9 @@ This test has not yet been updated to run on IE8. See http://b/hotlist?id=36311
       assertHTMLEquals(
           'Image\'s border=0 should not be removed during remove formatting' +
           ' even if deep inside anchor tag',
-          testHtml.replace(/<\/?b>/g, '') + controlCleanHtml, div.innerHTML);
+          testHtml.replace(/<\/?b>/g, '') +
+          controlCleanHtml + insertImageBoldGarbage,
+          div.innerHTML);
       FIELDMOCK.$verify();
     });
   }
@@ -604,7 +638,8 @@ This test has not yet been updated to run on IE8. See http://b/hotlist?id=36311
 
       // Only remove styling from inside tables.
       assertHTMLEquals(
-          "<table><tr><td>foo</td></tr><tr><td>ba</td></tr></table>",
+          '<table><tr><td>foo' + insertImageBoldGarbage +
+          '</td></tr><tr><td>ba</td></tr></table>',
           div.innerHTML);
       FIELDMOCK.$verify();
     });
@@ -814,7 +849,8 @@ function testRandomGoogleNewsSnippetRemoveFormatting() {
         'm/">Just Jared</a> - <a href="http://www.efluxmedia.com/news_Britne' +
         'y_Spears_Son_Released_from_Hospital_28696.html">eFluxMedia</a><br><' +
         'a href="http://news.google.com/news?ncl=1268233361&amp;hl=en">all 9' +
-        '50 news articles �</a>', div.innerHTML);
+        '50 news articles �</a>' +
+        insertImageFontGarbage, div.innerHTML);
     FIELDMOCK.$verify();
   });
 }
@@ -834,16 +870,18 @@ function testGetTableAncestor() {
 
   div.innerHTML = "foo<table><tr><td>foo</td></tr></table>bar";
   assertTrue('Full table is in table',
-      !!goog.editor.plugins.RemoveFormatting.getTableAncestor_(
-          div.childNodes[1]));
+      !!FORMATTER.getTableAncestor_(div.childNodes[1]));
 
   assertFalse('Outside of table',
-      !!goog.editor.plugins.RemoveFormatting.getTableAncestor_(div.firstChild));
+      !!FORMATTER.getTableAncestor_(div.firstChild));
 
   assertTrue('Table cell is in table',
-      !!goog.editor.plugins.RemoveFormatting.getTableAncestor_(
+      !!FORMATTER.getTableAncestor_(
           div.childNodes[1].firstChild.firstChild.firstChild));
 
+  div.innerHTML = "foo";
+  assertNull('No table inside field.',
+      FORMATTER.getTableAncestor_(div.childNodes[0]));
 }
 
 /**

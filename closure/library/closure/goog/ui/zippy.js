@@ -15,6 +15,7 @@
 /**
  * @fileoverview Zippy widget implementation.
  *
+ * @author eae@google.com (Emil A Eklund)
  * @see ../demos/zippy.html
  */
 
@@ -22,11 +23,13 @@ goog.provide('goog.ui.Zippy');
 goog.provide('goog.ui.Zippy.Events');
 goog.provide('goog.ui.ZippyEvent');
 
+goog.require('goog.a11y.aria');
+goog.require('goog.a11y.aria.Role');
+goog.require('goog.a11y.aria.State');
 goog.require('goog.dom');
-goog.require('goog.dom.a11y');
-goog.require('goog.dom.classes');
-goog.require('goog.events');
+goog.require('goog.dom.classlist');
 goog.require('goog.events.Event');
+goog.require('goog.events.EventHandler');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
@@ -55,7 +58,7 @@ goog.require('goog.style');
  */
 goog.ui.Zippy = function(header, opt_content, opt_expanded,
     opt_expandedHeader, opt_domHelper) {
-  goog.events.EventTarget.call(this);
+  goog.base(this);
 
   /**
    * DomHelper used to interact with the document, allowing components to be
@@ -102,15 +105,28 @@ goog.ui.Zippy = function(header, opt_content, opt_expanded,
    */
   this.expanded_ = opt_expanded == true;
 
+  /**
+   * A keyboard events handler. If there are two headers it is shared for both.
+   * @type {goog.events.EventHandler}
+   * @private
+   */
+  this.keyboardEventHandler_ = new goog.events.EventHandler(this);
+
+  /**
+   * A mouse events handler. If there are two headers it is shared for both.
+   * @type {goog.events.EventHandler}
+   * @private
+   */
+  this.mouseEventHandler_ = new goog.events.EventHandler(this);
+
   var self = this;
   function addHeaderEvents(el) {
     if (el) {
-      // Listen for click and keydown events on header
       el.tabIndex = 0;
-      goog.events.listen(el, goog.events.EventType.CLICK,
-          self.onHeaderClick_, false, self);
-      goog.events.listen(el, goog.events.EventType.KEYDOWN,
-          self.onHeaderKeyDown_, false, self);
+      goog.a11y.aria.setRole(el, self.getAriaRole());
+      goog.dom.classlist.add(el, goog.getCssName('goog-zippy-header'));
+      self.enableMouseEventsHandling_(el);
+      self.enableKeyboardEventsHandling_(el);
     }
   }
   addHeaderEvents(this.elHeader_);
@@ -128,32 +144,62 @@ goog.inherits(goog.ui.Zippy, goog.events.EventTarget);
  * @type {Object}
  */
 goog.ui.Zippy.Events = {
-  TOGGLE: 'toggle',
   // Zippy will dispatch an ACTION event for user interaction. Mimics
   // {@code goog.ui.Controls#performActionInternal} by first changing
   // the toggle state and then dispatching an ACTION event.
-  ACTION: 'action'
+  ACTION: 'action',
+  // Zippy state is toggled from collapsed to expanded or vice versa.
+  TOGGLE: 'toggle'
 };
+
+
+/**
+ * Whether to listen for and handle mouse events; defaults to true.
+ * @type {boolean}
+ * @private
+ */
+goog.ui.Zippy.prototype.handleMouseEvents_ = true;
+
+
+/**
+ * Whether to listen for and handle key events; defaults to true.
+ * @type {boolean}
+ * @private
+ */
+goog.ui.Zippy.prototype.handleKeyEvents_ = true;
 
 
 /** @override */
 goog.ui.Zippy.prototype.disposeInternal = function() {
-  if (this.elHeader_) {
-    goog.events.removeAll(this.elHeader_);
-  }
-  if (this.elExpandedHeader_) {
-    goog.events.removeAll(this.elExpandedHeader_);
-  }
-  goog.ui.Zippy.superClass_.disposeInternal.call(this);
+  goog.base(this, 'disposeInternal');
+  goog.dispose(this.keyboardEventHandler_);
+  goog.dispose(this.mouseEventHandler_);
+};
+
+
+/**
+ * @return {goog.a11y.aria.Role} The ARIA role to be applied to Zippy element.
+ */
+goog.ui.Zippy.prototype.getAriaRole = function() {
+  return goog.a11y.aria.Role.TAB;
 };
 
 
 /**
  * @return {Element} The content element.
- * @protected
  */
 goog.ui.Zippy.prototype.getContentElement = function() {
   return this.elContent_;
+};
+
+
+/**
+ * @return {Element} The visible header element.
+ */
+goog.ui.Zippy.prototype.getVisibleHeaderElement = function() {
+  var expandedHeader = this.elExpandedHeader_;
+  return expandedHeader && goog.style.isElementShown(expandedHeader) ?
+      expandedHeader : this.elHeader_;
 };
 
 
@@ -189,16 +235,20 @@ goog.ui.Zippy.prototype.toggle = function() {
 goog.ui.Zippy.prototype.setExpanded = function(expanded) {
   if (this.elContent_) {
     // Hide the element, if one is provided.
-    goog.style.showElement(this.elContent_, expanded);
+    goog.style.setElementShown(this.elContent_, expanded);
   } else if (expanded && this.lazyCreateFunc_) {
     // Assume that when the element is not hidden upon creation.
     this.elContent_ = this.lazyCreateFunc_();
   }
+  if (this.elContent_) {
+    goog.dom.classlist.add(this.elContent_,
+        goog.getCssName('goog-zippy-content'));
+  }
 
   if (this.elExpandedHeader_) {
     // Hide the show header and show the hide one.
-    goog.style.showElement(this.elHeader_, !expanded);
-    goog.style.showElement(this.elExpandedHeader_, expanded);
+    goog.style.setElementShown(this.elHeader_, !expanded);
+    goog.style.setElementShown(this.elExpandedHeader_, expanded);
   } else {
     // Update header image, if any.
     this.updateHeaderClassName(expanded);
@@ -240,12 +290,89 @@ goog.ui.Zippy.prototype.isExpanded = function() {
  */
 goog.ui.Zippy.prototype.updateHeaderClassName = function(expanded) {
   if (this.elHeader_) {
-    goog.dom.classes.enable(this.elHeader_,
+    goog.dom.classlist.enable(this.elHeader_,
         goog.getCssName('goog-zippy-expanded'), expanded);
-    goog.dom.classes.enable(this.elHeader_,
+    goog.dom.classlist.enable(this.elHeader_,
         goog.getCssName('goog-zippy-collapsed'), !expanded);
-    goog.dom.a11y.setState(
-        this.elHeader_, goog.dom.a11y.State.EXPANDED, expanded);
+    goog.a11y.aria.setState(this.elHeader_,
+        goog.a11y.aria.State.EXPANDED,
+        expanded);
+  }
+};
+
+
+/**
+ * @return {boolean} Whether the Zippy handles its own key events.
+ */
+goog.ui.Zippy.prototype.isHandleKeyEvents = function() {
+  return this.handleKeyEvents_;
+};
+
+
+/**
+ * @return {boolean} Whether the Zippy handles its own mouse events.
+ */
+goog.ui.Zippy.prototype.isHandleMouseEvents = function() {
+  return this.handleMouseEvents_;
+};
+
+
+/**
+ * Sets whether the Zippy handles it's own keyboard events.
+ * @param {boolean} enable Whether the Zippy handles keyboard events.
+ */
+goog.ui.Zippy.prototype.setHandleKeyboardEvents = function(enable) {
+  if (this.handleKeyEvents_ != enable) {
+    this.handleKeyEvents_ = enable;
+    if (enable) {
+      this.enableKeyboardEventsHandling_(this.elHeader_);
+      this.enableKeyboardEventsHandling_(this.elExpandedHeader_);
+    } else {
+      this.keyboardEventHandler_.removeAll();
+    }
+  }
+};
+
+
+/**
+ * Sets whether the Zippy handles it's own mouse events.
+ * @param {boolean} enable Whether the Zippy handles mouse events.
+ */
+goog.ui.Zippy.prototype.setHandleMouseEvents = function(enable) {
+  if (this.handleMouseEvents_ != enable) {
+    this.handleMouseEvents_ = enable;
+    if (enable) {
+      this.enableMouseEventsHandling_(this.elHeader_);
+      this.enableMouseEventsHandling_(this.elExpandedHeader_);
+    } else {
+      this.mouseEventHandler_.removeAll();
+    }
+  }
+};
+
+
+/**
+ * Enables keyboard events handling for the passed header element.
+ * @param {Element} header The header element.
+ * @private
+ */
+goog.ui.Zippy.prototype.enableKeyboardEventsHandling_ = function(header) {
+  if (header) {
+    this.keyboardEventHandler_.listen(header, goog.events.EventType.KEYDOWN,
+        this.onHeaderKeyDown_);
+  }
+};
+
+
+/**
+ * Enables mouse events handling for the passed header element.
+ * @param {Element} header The header element.
+ * @private
+ */
+goog.ui.Zippy.prototype.enableMouseEventsHandling_ = function(header) {
+  if (header) {
+    this.mouseEventHandler_.listen(header, goog.events.EventType.CLICK,
+        this.onHeaderClick_);
   }
 };
 
@@ -264,7 +391,7 @@ goog.ui.Zippy.prototype.onHeaderKeyDown_ = function(event) {
     this.toggle();
     this.dispatchActionEvent_();
 
-    // Prevent enter key from submiting form.
+    // Prevent enter key from submitting form.
     event.preventDefault();
 
     event.stopPropagation();
@@ -305,9 +432,10 @@ goog.ui.Zippy.prototype.dispatchActionEvent_ = function() {
  * @param {boolean} expanded Expanded state.
  * @extends {goog.events.Event}
  * @constructor
+ * @final
  */
 goog.ui.ZippyEvent = function(type, target, expanded) {
-  goog.events.Event.call(this, type, target);
+  goog.base(this, type, target);
 
   /**
    * The expanded state.

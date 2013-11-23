@@ -943,7 +943,7 @@ goog.vec.Matrix4.multVec4 = function(mat, vec, resultVec) {
  */
 goog.vec.Matrix4.multVec3ToArray = function(mat, vec, resultVec) {
   goog.vec.Matrix4.multVec3(
-      mat, vec, (/** @type {goog.vec.ArrayType} */ resultVec));
+      mat, vec, /** @type {goog.vec.ArrayType} */ (resultVec));
   return resultVec;
 };
 
@@ -962,7 +962,7 @@ goog.vec.Matrix4.multVec3ToArray = function(mat, vec, resultVec) {
  */
 goog.vec.Matrix4.multVec4ToArray = function(mat, vec, resultVec) {
   goog.vec.Matrix4.multVec4(
-      mat, vec, (/** @type {goog.vec.ArrayType} */ resultVec));
+      mat, vec, /** @type {goog.vec.ArrayType} */ (resultVec));
   return resultVec;
 };
 
@@ -1380,8 +1380,8 @@ goog.vec.Matrix4.applyRotate = function(mat, angle, x, y, z) {
  * @private
  */
 goog.vec.Matrix4.tmpVec3_ = [
-  goog.vec.Vec3.create(),
-  goog.vec.Vec3.create()
+  goog.vec.Vec3.createNumber(),
+  goog.vec.Vec3.createNumber()
 ];
 
 
@@ -1390,9 +1390,9 @@ goog.vec.Matrix4.tmpVec3_ = [
  * @private
  */
 goog.vec.Matrix4.tmpVec4_ = [
-  goog.vec.Vec4.create(),
-  goog.vec.Vec4.create(),
-  goog.vec.Vec4.create()
+  goog.vec.Vec4.createNumber(),
+  goog.vec.Vec4.createNumber(),
+  goog.vec.Vec4.createNumber()
 ];
 
 

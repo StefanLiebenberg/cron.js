@@ -18,6 +18,7 @@
  * text changes and allows the menu item to update its content and state based
  * on the filter.
  *
+ * @author eae@google.com (Emil A Eklund)
  */
 
 goog.provide('goog.ui.FilterObservingMenuItemRenderer');
@@ -33,6 +34,7 @@ goog.require('goog.ui.MenuItemRenderer');
  *
  * @constructor
  * @extends {goog.ui.MenuItemRenderer}
+ * @final
  */
 goog.ui.FilterObservingMenuItemRenderer = function() {
   goog.ui.MenuItemRenderer.call(this);
@@ -54,6 +56,7 @@ goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS =
  * Returns the CSS class to be applied to menu items rendered using this
  * renderer.
  * @return {string} Renderer-specific CSS class.
+ * @override
  */
 goog.ui.FilterObservingMenuItemRenderer.prototype.getCssClass = function() {
   return goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS;

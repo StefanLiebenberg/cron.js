@@ -21,6 +21,7 @@
 goog.provide('goog.storage.mechanism.mechanismfactory');
 
 goog.require('goog.storage.mechanism.HTML5LocalStorage');
+goog.require('goog.storage.mechanism.HTML5SessionStorage');
 goog.require('goog.storage.mechanism.IEUserData');
 goog.require('goog.storage.mechanism.IterableMechanism');
 goog.require('goog.storage.mechanism.PrefixedMechanism');
@@ -45,9 +46,9 @@ goog.storage.mechanism.mechanismfactory.USER_DATA_SHARED_KEY =
  * @return {goog.storage.mechanism.IterableMechanism} Created mechanism or null.
  */
 goog.storage.mechanism.mechanismfactory.create = function(opt_namespace) {
-  var factory = goog.storage.mechanism.mechanismfactory;
-  return factory.createHTML5LocalStorage(opt_namespace) ||
-      factory.createIEUserData(opt_namespace);
+  return goog.storage.mechanism.mechanismfactory.createHTML5LocalStorage(
+      opt_namespace) ||
+      goog.storage.mechanism.mechanismfactory.createIEUserData(opt_namespace);
 };
 
 
@@ -65,12 +66,29 @@ goog.storage.mechanism.mechanismfactory.createHTML5LocalStorage = function(
     opt_namespace) {
   var storage = new goog.storage.mechanism.HTML5LocalStorage();
   if (storage.isAvailable()) {
-    if (opt_namespace) {
-      return new goog.storage.mechanism.PrefixedMechanism(
-          storage, opt_namespace);
-    } else {
-      return storage;
-    }
+    return opt_namespace ? new goog.storage.mechanism.PrefixedMechanism(
+        storage, opt_namespace) : storage;
+  }
+  return null;
+};
+
+
+/**
+ * Returns an HTML5 session storage mechanism, or null if unavailable.
+ * Since the HTML5 session storage does not support namespaces natively,
+ * and the key-value database is shared between all the code paths
+ * that request it, it is recommended that an optional namespace is
+ * used to provide key separation employing a prefix.
+ *
+ * @param {string=} opt_namespace Restricts the visibility to given namespace.
+ * @return {goog.storage.mechanism.IterableMechanism} Created mechanism or null.
+ */
+goog.storage.mechanism.mechanismfactory.createHTML5SessionStorage = function(
+    opt_namespace) {
+  var storage = new goog.storage.mechanism.HTML5SessionStorage();
+  if (storage.isAvailable()) {
+    return opt_namespace ? new goog.storage.mechanism.PrefixedMechanism(
+        storage, opt_namespace) : storage;
   }
   return null;
 };

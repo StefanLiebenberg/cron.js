@@ -279,11 +279,11 @@ goog.ui.Menu.prototype.setPosition = function(x, opt_y) {
   // that the position gets set correctly.
   var visible = this.isVisible();
   if (!visible) {
-    goog.style.showElement(this.getElement(), true);
+    goog.style.setElementShown(this.getElement(), true);
   }
   goog.style.setPageOffset(this.getElement(), x, opt_y);
   if (!visible) {
-    goog.style.showElement(this.getElement(), false);
+    goog.style.setElementShown(this.getElement(), false);
   }
 };
 
@@ -417,6 +417,41 @@ goog.ui.Menu.prototype.canHighlightItem = function(item) {
 goog.ui.Menu.prototype.decorateInternal = function(element) {
   this.decorateContent(element);
   goog.ui.Menu.superClass_.decorateInternal.call(this, element);
+};
+
+
+/** @override */
+goog.ui.Menu.prototype.handleKeyEventInternal = function(e) {
+  var handled = goog.base(this, 'handleKeyEventInternal', e);
+  if (!handled) {
+    // Loop through all child components, and for each menu item call its
+    // key event handler so that keyboard mnemonics can be handled.
+    this.forEachChild(function(menuItem) {
+      if (!handled && menuItem.getMnemonic &&
+          menuItem.getMnemonic() == e.keyCode) {
+        if (this.isEnabled()) {
+          this.setHighlighted(menuItem);
+        }
+        // We still delegate to handleKeyEvent, so that it can handle
+        // enabled/disabled state.
+        handled = menuItem.handleKeyEvent(e);
+      }
+    }, this);
+  }
+  return handled;
+};
+
+
+/** @override */
+goog.ui.Menu.prototype.setHighlightedIndex = function(index) {
+  goog.base(this, 'setHighlightedIndex', index);
+
+  // Bring the highlighted item into view. This has no effect if the menu is not
+  // scrollable.
+  var child = this.getChildAt(index);
+  if (child) {
+    goog.style.scrollIntoContainerView(child.getElement(), this.getElement());
+  }
 };
 
 

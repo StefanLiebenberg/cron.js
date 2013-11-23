@@ -22,7 +22,7 @@
 goog.provide('goog.messaging.LoggerServer');
 
 goog.require('goog.Disposable');
-goog.require('goog.debug.Logger');
+goog.require('goog.log');
 
 
 
@@ -38,6 +38,7 @@ goog.require('goog.debug.Logger');
  *     distinguish this client's messages.
  * @constructor
  * @extends {goog.Disposable}
+ * @final
  */
 goog.messaging.LoggerServer = function(channel, serviceName, opt_channelName) {
   goog.base(this);
@@ -71,16 +72,20 @@ goog.inherits(goog.messaging.LoggerServer, goog.Disposable);
 
 /**
  * Handles logging messages from the client.
- * @param {!{level: number, message: string, name: string,
- *           exception: Object}} args
+ * @param {!Object|string} message
  *     The logging information from the client.
  * @private
  */
-goog.messaging.LoggerServer.prototype.log_ = function(args) {
-  var level = goog.debug.Logger.Level.getPredefinedLevelByValue(args['level']);
+goog.messaging.LoggerServer.prototype.log_ = function(message) {
+  var args =
+      /**
+       * @type {!{level: number, message: string,
+       *           name: string, exception: Object}}
+       */ (message);
+  var level = goog.log.Level.getPredefinedLevelByValue(args['level']);
   if (level) {
     var msg = '[' + this.channelName_ + '] ' + args['message'];
-    goog.debug.Logger.getLogger(args['name'])
+    goog.log.getLogger(args['name'])
         .log(level, msg, args['exception']);
   }
 };

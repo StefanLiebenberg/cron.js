@@ -7,6 +7,7 @@ Use of this source code is governed by the Apache License, Version 2.0.
 See the COPYING file for details.
 -->
 <!--
+Author:  attila@google.com (Attila Bodis)
 -->
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -203,15 +204,9 @@ See the COPYING file for details.
       targets = [];
     }
 
-    function tearDown() {
-      goog.events.removeAll();
-    }
-
     function testCreateEventListeners() {
       table.run(goog.partial(createEventListeners, SAMPLES_PER_RUN),
           '1A: Create event listeners');
-      assertEquals(SAMPLES_PER_RUN * timer.getNumSamples() * 2,
-          goog.events.getTotalListenerCount());
       assertEquals(0, actionCount);
       assertEquals(0, changeCount);
     }
@@ -267,8 +262,6 @@ See the COPYING file for details.
         createEventListeners(SAMPLES_PER_RUN);
         dispatchEvents(SAMPLES_PER_RUN);
       }, '3A: Events');
-      assertEquals(SAMPLES_PER_RUN * timer.getNumSamples() * 2,
-          goog.events.getTotalListenerCount());
       assertEquals(SAMPLES_PER_RUN * timer.getNumSamples() * 5, actionCount);
       assertEquals(SAMPLES_PER_RUN * timer.getNumSamples() * 5, changeCount);
     }

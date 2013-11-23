@@ -20,6 +20,7 @@
  * Coordinate is required. Where appropriate, Vec2 functions accept both Vec2
  * and Coordinate objects as input.
  *
+ * @author brenneman@google.com (Shawn Brenneman)
  */
 
 goog.provide('goog.math.Vec2');
@@ -86,6 +87,7 @@ goog.math.Vec2.fromCoordinate = function(a) {
 
 /**
  * @return {!goog.math.Vec2} A new vector with the same coordinates as this one.
+ * @override
  */
 goog.math.Vec2.prototype.clone = function() {
   return new goog.math.Vec2(this.x, this.y);
@@ -103,7 +105,7 @@ goog.math.Vec2.prototype.magnitude = function() {
 
 /**
  * Returns the squared magnitude of the vector measured from the origin.
- * NOTE(user): Leaving out the square root is not a significant
+ * NOTE(brenneman): Leaving out the square root is not a significant
  * optimization in JavaScript.
  * @return {number} The length of the vector, squared.
  */
@@ -113,15 +115,12 @@ goog.math.Vec2.prototype.squaredMagnitude = function() {
 
 
 /**
- * Scales the current vector by a constant.
- * @param {number} s The scale factor.
- * @return {!goog.math.Vec2} The scaled vector.
+ * @return {!goog.math.Vec2} This coordinate after scaling.
+ * @override
  */
-goog.math.Vec2.prototype.scale = function(s) {
-  this.x *= s;
-  this.y *= s;
-  return this;
-};
+goog.math.Vec2.prototype.scale =
+    /** @type {function(number, number=):!goog.math.Vec2} */
+    (goog.math.Coordinate.prototype.scale);
 
 
 /**
@@ -145,8 +144,7 @@ goog.math.Vec2.prototype.normalize = function() {
 
 
 /**
- * Adds another vector to this vector in-place. Uses goog.math.Vec2.sum(a, b) to
- * return a new vector.
+ * Adds another vector to this vector in-place.
  * @param {!goog.math.Coordinate} b The vector to add.
  * @return {!goog.math.Vec2}  This vector with {@code b} added.
  */
@@ -158,8 +156,7 @@ goog.math.Vec2.prototype.add = function(b) {
 
 
 /**
- * Subtracts another vector from this vector in-place. Uses
- * goog.math.Vec2.difference(a, b) to return a new vector.
+ * Subtracts another vector from this vector in-place.
  * @param {!goog.math.Coordinate} b The vector to subtract.
  * @return {!goog.math.Vec2} This vector with {@code b} subtracted.
  */

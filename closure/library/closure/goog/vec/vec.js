@@ -18,19 +18,47 @@
  *     library.
  */
 goog.provide('goog.vec');
+goog.provide('goog.vec.AnyType');
+goog.provide('goog.vec.ArrayType');
+goog.provide('goog.vec.Float32');
+goog.provide('goog.vec.Float64');
+goog.provide('goog.vec.Number');
+
 
 /**
- * On platforms that don't have native Float32Array support we use a javascript
- * implementation so that this math library can be used on all platforms.
+ * On platforms that don't have native Float32Array or Float64Array support we
+ * use a javascript implementation so that this math library can be used on all
+ * platforms.
+ * @suppress {extraRequire}
  */
 goog.require('goog.vec.Float32Array');
+/** @suppress {extraRequire} */
+goog.require('goog.vec.Float64Array');
+
+// All vector and matrix operations are based upon arrays of numbers using
+// either Float32Array, Float64Array, or a standard Javascript Array of
+// Numbers.
+
+
+/** @typedef {Float32Array} */
+goog.vec.Float32;
+
+
+/** @typedef {Float64Array} */
+goog.vec.Float64;
+
+
+/** @typedef {Array.<number>} */
+goog.vec.Number;
+
+
+/** @typedef {goog.vec.Float32|goog.vec.Float64|goog.vec.Number} */
+goog.vec.AnyType;
 
 
 /**
- * All vector and matrix operations are based upon arrays of numbers using
- * either a standard Javascript Array or the Float32Array typed array.
- *
- * @typedef {Float32Array|Array.<Number>}
+ * @deprecated Use AnyType.
+ * @typedef {Float32Array|Array.<number>}
  */
 goog.vec.ArrayType;
 

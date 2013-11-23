@@ -17,7 +17,7 @@
 
 """Unit test for source."""
 
-
+__author__ = 'nnaze@google.com (Nathan Naze)'
 
 
 import unittest
@@ -50,6 +50,29 @@ class SourceTestCase(unittest.TestCase):
 
     self.assertRaises(Exception, MakeSource)
 
+  def testStripComments(self):
+    self.assertEquals(
+        '\nvar foo = function() {}',
+        source.Source._StripComments((
+            '/* This is\n'
+            '  a comment split\n'
+            '  over multiple lines\n'
+            '*/\n'
+            'var foo = function() {}')))
+
+  def testGoogStatementsInComments(self):
+    test_source = source.Source(_TEST_COMMENT_SOURCE)
+
+    self.assertEqual(set(['foo']),
+                     test_source.provides)
+    self.assertEqual(set(['goog.events.EventType']),
+                     test_source.requires)
+
+  def testHasProvideGoog(self):
+    self.assertTrue(source.Source._HasProvideGoogFlag(_TEST_BASE_SOURCE))
+    self.assertTrue(source.Source._HasProvideGoogFlag(_TEST_BAD_BASE_SOURCE))
+    self.assertFalse(source.Source._HasProvideGoogFlag(_TEST_COMMENT_SOURCE))
+
 
 _TEST_SOURCE = """// Fake copyright notice
 
@@ -67,14 +90,43 @@ function foo() {
 }
 """
 
+_TEST_COMMENT_SOURCE = """// Fake copyright notice
+
+goog.provide('foo');
+
+/*
+goog.provide('foo.test');
+ */
+
+/*
+goog.require('goog.dom');
+*/
+
+// goog.require('goog.dom');
+
+goog.require('goog.events.EventType');
+
+function bar() {
+  this.baz = 55;
+}
+"""
+
 _TEST_BASE_SOURCE = """
-var goog = goog || {}; // Identifies this file as the Closure base.
+/**
+ * @fileoverview The base file.
+ * @provideGoog
+ */
+
+var goog = goog || {};
 """
 
 _TEST_BAD_BASE_SOURCE = """
-goog.provide('goog');
+/**
+ * @fileoverview The base file.
+ * @provideGoog
+ */
 
-var goog = goog || {}; // Identifies this file as the Closure base.
+goog.provide('goog');
 """
 
 

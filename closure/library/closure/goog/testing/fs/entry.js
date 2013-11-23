@@ -24,10 +24,13 @@ goog.provide('goog.testing.fs.FileEntry');
 
 goog.require('goog.Timer');
 goog.require('goog.array');
+goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
 goog.require('goog.fs.DirectoryEntry');
-goog.require('goog.fs.DirectoryEntry.Behavior');
+goog.require('goog.fs.DirectoryEntryImpl');
+goog.require('goog.fs.Entry');
 goog.require('goog.fs.Error');
+goog.require('goog.fs.FileEntry');
 goog.require('goog.functions');
 goog.require('goog.object');
 goog.require('goog.string');
@@ -44,6 +47,7 @@ goog.require('goog.testing.fs.FileWriter');
  *     containing this entry.
  * @param {string} name The name of this entry.
  * @constructor
+ * @implements {goog.fs.Entry}
  */
 goog.testing.fs.Entry = function(fs, parent, name) {
   /**
@@ -75,33 +79,21 @@ goog.testing.fs.Entry = function(fs, parent, name) {
 goog.testing.fs.Entry.prototype.deleted = false;
 
 
-/**
- * @see {goog.fs.Entry#isFile}
- * @return {boolean}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.isFile = goog.abstractMethod;
 
 
-/**
- * @see {goog.fs.Entry#isDirectory}
- * @return {boolean}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.isDirectory = goog.abstractMethod;
 
 
-/**
- * @see {goog.fs.Entry#getName}
- * @return {string}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.getName = function() {
   return this.name_;
 };
 
 
-/**
- * @see {goog.fs.Entry#getFullPath}
- * @return {string}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.getFullPath = function() {
   if (this.getName() == '' || this.parent.getName() == '') {
     // The root directory has an empty name
@@ -113,27 +105,23 @@ goog.testing.fs.Entry.prototype.getFullPath = function() {
 
 
 /**
- * @see {goog.fs.Entry#getFileSystem}
  * @return {!goog.testing.fs.FileSystem}
+ * @override
  */
 goog.testing.fs.Entry.prototype.getFileSystem = function() {
   return this.fs_;
 };
 
 
-/**
- * @see {goog.fs.Entry#getLastModified}
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.getLastModified = goog.abstractMethod;
 
 
-/**
- * @see {goog.fs.Entry#moveTo}
- * @param {!goog.testing.fs.DirectoryEntry} parent
- * @param {string=} opt_newName
- * @return {!goog.async.Deferred}
- */
+/** @override */
+goog.testing.fs.Entry.prototype.getMetadata = goog.abstractMethod;
+
+
+/** @override */
 goog.testing.fs.Entry.prototype.moveTo = function(parent, opt_newName) {
   var msg = 'moving ' + this.getFullPath() + ' into ' + parent.getFullPath() +
       (opt_newName ? ', renaming to ' + opt_newName : '');
@@ -147,13 +135,9 @@ goog.testing.fs.Entry.prototype.moveTo = function(parent, opt_newName) {
 };
 
 
-/**
- * @see {goog.fs.Entry#copyTo}
- * @param {!goog.testing.fs.DirectoryEntry} parent
- * @param {string=} opt_newName
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.copyTo = function(parent, opt_newName) {
+  goog.asserts.assert(parent instanceof goog.testing.fs.DirectoryEntry);
   var msg = 'copying ' + this.getFullPath() + ' into ' + parent.getFullPath() +
       (opt_newName ? ', renaming to ' + opt_newName : '');
   return this.checkNotDeleted(msg).addCallback(function() {
@@ -174,19 +158,21 @@ goog.testing.fs.Entry.prototype.copyTo = function(parent, opt_newName) {
 goog.testing.fs.Entry.prototype.clone = goog.abstractMethod;
 
 
-/**
- * @see {goog.fs.Entry#toUrl}
- * @return {string}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.toUrl = function(opt_mimetype) {
   return 'fakefilesystem:' + this.getFullPath();
 };
 
 
-/**
- * @see {goog.fs.Entry#remove}
- * @return {!goog.async.Deferred}
- */
+/** @override */
+goog.testing.fs.Entry.prototype.toUri = goog.testing.fs.Entry.prototype.toUrl;
+
+
+/** @override */
+goog.testing.fs.Entry.prototype.wrapEntry = goog.abstractMethod;
+
+
+/** @override */
 goog.testing.fs.Entry.prototype.remove = function() {
   var msg = 'removing ' + this.getFullPath();
   return this.checkNotDeleted(msg).addCallback(function() {
@@ -198,10 +184,7 @@ goog.testing.fs.Entry.prototype.remove = function() {
 };
 
 
-/**
- * @see {goog.fs.Entry#getParent}
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.Entry.prototype.getParent = function() {
   var msg = 'getting parent of ' + this.getFullPath();
   return this.checkNotDeleted(msg).
@@ -246,6 +229,8 @@ goog.testing.fs.Entry.prototype.checkNotDeleted = function(action) {
  *     entry objects.
  * @constructor
  * @extends {goog.testing.fs.Entry}
+ * @implements {goog.fs.DirectoryEntry}
+ * @final
  */
 goog.testing.fs.DirectoryEntry = function(fs, parent, name, children) {
   goog.base(this, fs, parent || this, name);
@@ -267,6 +252,18 @@ goog.testing.fs.DirectoryEntry = function(fs, parent, name, children) {
 goog.inherits(goog.testing.fs.DirectoryEntry, goog.testing.fs.Entry);
 
 
+/**
+ * Constructs and returns the metadata object for this entry.
+ * @return {{modificationTime: Date}} The metadata object.
+ * @private
+ */
+goog.testing.fs.DirectoryEntry.prototype.getMetadata_ = function() {
+  return {
+    'modificationTime': new Date(this.lastModifiedTimestamp_)
+  };
+};
+
+
 /** @override */
 goog.testing.fs.DirectoryEntry.prototype.isFile = function() {
   return false;
@@ -284,6 +281,14 @@ goog.testing.fs.DirectoryEntry.prototype.getLastModified = function() {
   var msg = 'reading last modified date for ' + this.getFullPath();
   return this.checkNotDeleted(msg).
       addCallback(function() {return new Date(this.lastModifiedTimestamp_)});
+};
+
+
+/** @override */
+goog.testing.fs.DirectoryEntry.prototype.getMetadata = function() {
+  var msg = 'reading metadata for ' + this.getFullPath();
+  return this.checkNotDeleted(msg).
+      addCallback(function() {return this.getMetadata_()});
 };
 
 
@@ -310,12 +315,7 @@ goog.testing.fs.DirectoryEntry.prototype.remove = function() {
 };
 
 
-/**
- * @see {goog.fs.DirectoryEntry#getFile}
- * @param {string} path
- * @param {goog.fs.DirectoryEntry.Behavior=} opt_behavior
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.DirectoryEntry.prototype.getFile = function(
     path, opt_behavior) {
   var msg = 'loading file ' + path + ' from ' + this.getFullPath();
@@ -330,12 +330,7 @@ goog.testing.fs.DirectoryEntry.prototype.getFile = function(
 };
 
 
-/**
- * @see {goog.fs.DirectoryEntry#getDirectory}
- * @param {string} path
- * @param {goog.fs.DirectoryEntry.Behavior=} opt_behavior
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.DirectoryEntry.prototype.getDirectory = function(
     path, opt_behavior) {
   var msg = 'loading directory ' + path + ' from ' + this.getFullPath();
@@ -495,10 +490,7 @@ goog.testing.fs.DirectoryEntry.prototype.hasChild = function(name) {
 };
 
 
-/**
- * @see {goog.fs.DirectoryEntry.removeRecursively}
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.DirectoryEntry.prototype.removeRecursively = function() {
   var msg = 'removing ' + this.getFullPath() + ' recursively';
   return this.checkNotDeleted(msg).addCallback(function() {
@@ -513,10 +505,7 @@ goog.testing.fs.DirectoryEntry.prototype.removeRecursively = function() {
 };
 
 
-/**
- * @see {goog.fs.DirectoryEntry#listDirectory}
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.DirectoryEntry.prototype.listDirectory = function() {
   var msg = 'listing ' + this.getFullPath();
   return this.checkNotDeleted(msg).addCallback(function() {
@@ -525,12 +514,10 @@ goog.testing.fs.DirectoryEntry.prototype.listDirectory = function() {
 };
 
 
-/**
- * @see {goog.fs.DirectoryEntry#createPath}
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.DirectoryEntry.prototype.createPath =
-    goog.fs.DirectoryEntry.prototype.createPath;
+    // This isn't really type-safe.
+    /** @type {!Function} */ (goog.fs.DirectoryEntryImpl.prototype.createPath);
 
 
 
@@ -544,6 +531,8 @@ goog.testing.fs.DirectoryEntry.prototype.createPath =
  * @param {string} data The data initially contained in the file.
  * @constructor
  * @extends {goog.testing.fs.Entry}
+ * @implements {goog.fs.FileEntry}
+ * @final
  */
 goog.testing.fs.FileEntry = function(fs, parent, name, data) {
   goog.base(this, fs, parent, name);
@@ -554,6 +543,15 @@ goog.testing.fs.FileEntry = function(fs, parent, name, data) {
    * @private
    */
   this.file_ = new goog.testing.fs.File(name, new Date(goog.now()), data);
+
+  /**
+   * The metadata for file.
+   * @type {{modificationTime: Date}}
+   * @private
+   */
+  this.metadata_ = {
+    'modificationTime': this.file_.lastModifiedDate
+  };
 };
 goog.inherits(goog.testing.fs.FileEntry, goog.testing.fs.Entry);
 
@@ -586,10 +584,16 @@ goog.testing.fs.FileEntry.prototype.getLastModified = function() {
 };
 
 
-/**
- * @see {goog.fs.FileEntry#createWriter}
- * @return {!goog.async.Deferred}
- */
+/** @override */
+goog.testing.fs.FileEntry.prototype.getMetadata = function() {
+  var msg = 'getting metadata for ' + this.getFullPath();
+  return this.checkNotDeleted(msg).addCallback(function() {
+    return this.metadata_;
+  });
+};
+
+
+/** @override */
 goog.testing.fs.FileEntry.prototype.createWriter = function() {
   var d = new goog.async.Deferred();
   goog.Timer.callOnce(
@@ -598,10 +602,7 @@ goog.testing.fs.FileEntry.prototype.createWriter = function() {
 };
 
 
-/**
- * @see {goog.fs.FileEntry#file}
- * @return {!goog.async.Deferred}
- */
+/** @override */
 goog.testing.fs.FileEntry.prototype.file = function() {
   var msg = 'getting file for ' + this.getFullPath();
   return this.checkNotDeleted(msg).addCallback(function() {

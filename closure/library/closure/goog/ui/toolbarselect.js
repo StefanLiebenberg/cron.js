@@ -15,11 +15,12 @@
 /**
  * @fileoverview A toolbar select control.
  *
+ * @author attila@google.com (Attila Bodis)
+ * @author ssaviano@google.com (Steven Saviano)
  */
 
 goog.provide('goog.ui.ToolbarSelect');
 
-goog.require('goog.ui.ControlContent');
 goog.require('goog.ui.Select');
 goog.require('goog.ui.ToolbarMenuButtonRenderer');
 goog.require('goog.ui.registry');
