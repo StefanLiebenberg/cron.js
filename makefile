@@ -54,7 +54,7 @@ _ALWAYS:
 
 
 cli-compile: 
-	java -jar bin/closure-cli.jar --config config/closure-compiled.yaml build javascript --compile
+	java -jar bin/closure-cli.jar --config config/closure-compiled.yaml build javascript html --compile --javascriptOutputFile build2/cron.min.js
 
 cli-test:
 	java -jar bin/closure-cli.jar --config config/closure-compiled.yaml test

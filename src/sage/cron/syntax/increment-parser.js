@@ -14,7 +14,6 @@ sage.cron.syntax.IncrementParser = function(parser) {
 goog.inherits(sage.cron.syntax.IncrementParser,
               sage.cron.syntax.AbstractParser);
 
-
 /**
  *  @type {sage.cron.SpecParser}
  */
