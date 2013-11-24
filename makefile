@@ -2,20 +2,20 @@ SHELL := /bin/bash
 
 main: all
 
-all: build/cron.cc.js build/cron.debug.js
+all: clean create_tests test build/cron.cc.js build/cron.debug.js
 
-build:
-	mkdir build -p;
+clean: clean_tests
+	rm -rf build;
 
 build/cron.cc.js:
-	java -jar bin/closure-cli.jar build javascript html \
+	java -jar bin/closure-cli.jar build javascript \
 	  --compile \
-	  --javascriptOutputFile build/cron.cc.js \
+	  --javascriptOutputFile build/cron.cc.js
 
 build/cron.debug.js:
-	java -jar bin/closure-cli.jar build javascript html \
+	java -jar bin/closure-cli.jar build javascript \
           --compile --debug \
-          --javascriptOutputFile build/cron.debug.js \
+          --javascriptOutputFile build/cron.debug.js
 		
 lint:
 	gjslint --strict -r src
