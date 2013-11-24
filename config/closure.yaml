@@ -1,4 +1,4 @@
-outputDirectory: build2
+outputDirectory: build
 javascript:
   sourceDirectories:
   - closure/library/
