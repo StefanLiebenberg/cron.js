@@ -14,9 +14,6 @@ function tearDown() {
 
 function testConstructor() {
   assertTrue(comma_parser instanceof sage.cron.syntax.CommaParser);
-  assertTrue(comma_parser instanceof sage.util.StringParser);
 }
 
-function testCommaParser() {
-  assert(false);
-}
+

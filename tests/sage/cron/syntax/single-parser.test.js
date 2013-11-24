@@ -1,6 +1,7 @@
 goog.provide('sage.cron.syntax.SingleParserTest');
 goog.require('goog.testing.jsunit');
 goog.require('sage.cron.syntax.SingleParser');
+goog.require('sage.cron.SpecParser');
 
 goog.exportSymbol('testSingleParser', function () {
 //  var minuteSpecParser = /** @type {sage.cron.SpecParser} */

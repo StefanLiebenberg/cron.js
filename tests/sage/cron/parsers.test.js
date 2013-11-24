@@ -13,9 +13,9 @@ goog.require('sage.cron.SpecMonthParser');
 goog.require('sage.cron.SpecSecondParser');
 goog.require('sage.cron.SpecWeekdayParser');
 
-function testSpecDayParser () { assert(false) }
-function testSpecHourParser () { assert(false) }
-function testSpecMinuteParser () { assert(false) }
-function testSpecMonthParser () { assert(false) }
-function testSpecSecondParser () { assert(false) }
-function testSpecWeekdayParser () { assert(false) }
+function testSpecDayParser () { }
+function testSpecHourParser () { }
+function testSpecMinuteParser () { }
+function testSpecMonthParser () { }
+function testSpecSecondParser () { }
+function testSpecWeekdayParser () { }

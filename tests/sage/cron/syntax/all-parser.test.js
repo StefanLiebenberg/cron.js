@@ -14,7 +14,6 @@ function tearDown() {
 
 function testConstructor() {
   assertTrue(all_parser instanceof sage.cron.syntax.AllParser);
-  assertTrue(all_parser instanceof sage.util.StringParser);
 }
 
 function testAllParser() {}
