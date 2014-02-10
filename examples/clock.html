@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='../build/cron.cc.js'></script>
+    <script>
+
+    </script>
+    <style>
+        .clock {
+            border: 1px solid black;
+            width: 400px;
+            height: 400px;
+            position: relative;
+        }
+
+        .clock .hour-1,
+        .clock .hour-2,
+        .clock .hour-3,
+        .clock .hour-4,
+        .clock .hour-5,
+        .clock .hour-6,
+        .clock .hour-7,
+        .clock .hour-8,
+        .clock .hour-9,
+        .clock .hour-10,
+        .clock .hour-11,
+        .clock .hour-12,
+        .clock .hour-handle,
+        .clock .minute-handle,
+        .clock .seconds-handle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: black;
+            display: block;
+            color: white;
+            margin: auto;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 20px;
+            border-radius: 10px;
+        }
+
+        .clock .hour-1 {
+            display: block;
+            left: 260px;
+            top: 63px;
+        }
+
+        .clock .hour-2 {
+            display: block;
+            left: 330px;
+            top: 126px;
+        }
+
+        .clock .hour-3 {
+            display: block;
+            left: 380px;
+            top: 190px;
+        }
+
+        .clock .hour-4 {
+            display: block;
+            left: 330px;
+            top: 253px;
+        }
+
+        .clock .hour-5 {
+            display: block;
+            left: 260px;
+            top: 316px;
+        }
+
+        .clock .hour-6 {
+            display: block;
+            left: 190px;
+            top: 380px;
+        }
+
+        .clock .hour-7 {
+            display: block;
+            left: 120px;
+            top: 316px;
+        }
+
+        .clock .hour-8 {
+            display: block;
+            left: 50px;
+            top: 253px;
+        }
+
+        .clock .hour-9 {
+            display: block;
+            left: 0px;
+            top: 190px;
+        }
+
+        .clock .hour-10 {
+            display: block;
+            left: 50px;
+            top: 126px;
+        }
+
+        .clock .hour-11 {
+            display: block;
+            left: 120px;
+            top: 63px;
+        }
+
+        .clock .hour-12 {
+            display: block;
+            left: 190px;
+            top: 0px;
+        }
+
+        .clock .hour-handle {
+            width: 20px;
+            height: 100px;
+            top: 100px;
+            left: 190px;
+            -webkit-transform-origin: bottom;
+            -webkit-transform: rotate(0deg);
+        }
+
+        .clock .minute-handle {
+            width: 20px;
+            height: 170px;
+            top: 30px;
+            left: 190px;
+            transform: rotate(10deg);
+            -webkit-transform-origin: bottom;
+            -webkit-transform: rotate(10deg);
+        }
+
+        .clock .seconds-handle {
+            width: 10px;
+            height: 150px;
+            top: 50px;
+            left: 195px;
+            -webkit-transform-origin: bottom;
+            -webkit-transform: rotate(20deg);
+        }
+    </style>
+    <script>
+
+        var currentMinute = 0;
+        var currentSecond = 0;
+        var currentHour = 0;
+
+        function setElementRotation(css, perc) {
+            var handle = document.getElementsByClassName(css);
+            if (handle.length > 0) {
+                var cssStyle = handle[0].style;
+                var deg = (perc * 360);
+                cssStyle["webkitTransform"] = "rotate(" + deg + "deg)";
+            }
+        }
+
+        function setSecond(s) {
+            setElementRotation("seconds-handle", s / 60);
+            currentSecond = s % 60;
+        }
+
+        function setMinute(m) {
+            setElementRotation("minute-handle", m / 60);
+            currentMinute = m % 60;
+        }
+
+
+        function setHour(h) {
+            setElementRotation("hour-handle", h / 12);
+            currentHour = h % 12;
+        }
+
+        function tickSecond() {
+            setSecond(currentSecond + 1);
+        }
+
+        function tickMinute() {
+            setMinute(currentMinute + 1);
+        }
+
+        function tickHour() {
+            setHour(currentHour + 1);
+        }
+
+
+
+        var cron = new Cron();
+        cron.add(new Cron.Job("@second", tickSecond));
+        cron.add(new Cron.Job("@minute", tickMinute));
+        cron.add(new Cron.Job("@hour", tickHour));
+        cron.start();
+
+    </script>
+</head>
+<body>
+<div class="clock">
+    <span class="hour-1"><strong>1</strong></span>
+    <span class="hour-2"><strong>2</strong></span>
+    <span class="hour-3"><strong>3</strong></span>
+    <span class="hour-4"><strong>4</strong></span>
+    <span class="hour-5"><strong>5</strong></span>
+    <span class="hour-6"><strong>6</strong></span>
+    <span class="hour-7"><strong>7</strong></span>
+    <span class="hour-8"><strong>8</strong></span>
+    <span class="hour-9"><strong>9</strong></span>
+    <span class="hour-10"><strong>10</strong></span>
+    <span class="hour-11"><strong>11</strong></span>
+    <span class="hour-12"><strong>12</strong></span>
+
+    <div class="hour-handle"></div>
+    <div class="minute-handle"></div>
+    <div class="seconds-handle"></div>
+    <script>
+        var date = new Date();
+        setSecond(date.getSeconds());
+        setMinute(date.getMinutes());
+        setHour(date.getHours());
+    </script>
+</div>
+</body>
+
+</html>
