@@ -33,6 +33,8 @@ goog.setTestOnly = function(a) {
     throw a = a || "", Error("Importing test-only code into non-debug environment" + a ? ": " + a : ".");
   }
 };
+goog.forwardDeclare = function(a) {
+};
 COMPILED || (goog.isProvided_ = function(a) {
   return!goog.implicitNamespaces_[a] && !!goog.getObjectByName(a);
 }, goog.implicitNamespaces_ = {});
@@ -363,6 +365,10 @@ goog.inherits = function(a, b) {
   a.superClass_ = b.prototype;
   a.prototype = new c;
   a.prototype.constructor = a;
+  a.base = function(a, c, f) {
+    var g = Array.prototype.slice.call(arguments, 2);
+    return b.prototype[c].apply(a, g);
+  };
 };
 goog.base = function(a, b, c) {
   var d = arguments.callee.caller;
@@ -498,7 +504,7 @@ goog.string.newLineToBr = function(a, b) {
 };
 goog.string.htmlEscape = function(a, b) {
   if (b) {
-    return a.replace(goog.string.amperRe_, "\x26amp;").replace(goog.string.ltRe_, "\x26lt;").replace(goog.string.gtRe_, "\x26gt;").replace(goog.string.quotRe_, "\x26quot;");
+    return a.replace(goog.string.amperRe_, "\x26amp;").replace(goog.string.ltRe_, "\x26lt;").replace(goog.string.gtRe_, "\x26gt;").replace(goog.string.quotRe_, "\x26quot;").replace(goog.string.singleQuoteRe_, "\x26#39;");
   }
   if (!goog.string.allRe_.test(a)) {
     return a;
@@ -507,29 +513,35 @@ goog.string.htmlEscape = function(a, b) {
   -1 != a.indexOf("\x3c") && (a = a.replace(goog.string.ltRe_, "\x26lt;"));
   -1 != a.indexOf("\x3e") && (a = a.replace(goog.string.gtRe_, "\x26gt;"));
   -1 != a.indexOf('"') && (a = a.replace(goog.string.quotRe_, "\x26quot;"));
+  -1 != a.indexOf("'") && (a = a.replace(goog.string.singleQuoteRe_, "\x26#39;"));
   return a;
 };
 goog.string.amperRe_ = /&/g;
 goog.string.ltRe_ = /</g;
 goog.string.gtRe_ = />/g;
-goog.string.quotRe_ = /\"/g;
-goog.string.allRe_ = /[&<>\"]/;
+goog.string.quotRe_ = /"/g;
+goog.string.singleQuoteRe_ = /'/g;
+goog.string.allRe_ = /[&<>"']/;
 goog.string.unescapeEntities = function(a) {
   return goog.string.contains(a, "\x26") ? "document" in goog.global ? goog.string.unescapeEntitiesUsingDom_(a) : goog.string.unescapePureXmlEntities_(a) : a;
 };
-goog.string.unescapeEntitiesUsingDom_ = function(a) {
-  var b = {"\x26amp;":"\x26", "\x26lt;":"\x3c", "\x26gt;":"\x3e", "\x26quot;":'"'}, c = document.createElement("div");
-  return a.replace(goog.string.HTML_ENTITY_PATTERN_, function(a, e) {
-    var f = b[a];
-    if (f) {
-      return f;
+goog.string.unescapeEntitiesWithDocument = function(a, b) {
+  return goog.string.contains(a, "\x26") ? goog.string.unescapeEntitiesUsingDom_(a, b) : a;
+};
+goog.string.unescapeEntitiesUsingDom_ = function(a, b) {
+  var c = {"\x26amp;":"\x26", "\x26lt;":"\x3c", "\x26gt;":"\x3e", "\x26quot;":'"'}, d;
+  d = b ? b.createElement("div") : document.createElement("div");
+  return a.replace(goog.string.HTML_ENTITY_PATTERN_, function(a, b) {
+    var g = c[a];
+    if (g) {
+      return g;
     }
-    if ("#" == e.charAt(0)) {
-      var g = Number("0" + e.substr(1));
-      isNaN(g) || (f = String.fromCharCode(g));
+    if ("#" == b.charAt(0)) {
+      var h = Number("0" + b.substr(1));
+      isNaN(h) || (g = String.fromCharCode(h));
     }
-    f || (c.innerHTML = a + " ", f = c.firstChild.nodeValue.slice(0, -1));
-    return b[a] = f;
+    g || (d.innerHTML = a + " ", g = d.firstChild.nodeValue.slice(0, -1));
+    return c[a] = g;
   });
 };
 goog.string.unescapePureXmlEntities_ = function(a) {
@@ -740,7 +752,12 @@ goog.dom = {};
 goog.dom.NodeType = {ELEMENT:1, ATTRIBUTE:2, TEXT:3, CDATA_SECTION:4, ENTITY_REFERENCE:5, ENTITY:6, PROCESSING_INSTRUCTION:7, COMMENT:8, DOCUMENT:9, DOCUMENT_TYPE:10, DOCUMENT_FRAGMENT:11, NOTATION:12};
 goog.debug = {};
 goog.debug.Error = function(a) {
-  Error.captureStackTrace ? Error.captureStackTrace(this, goog.debug.Error) : this.stack = Error().stack || "";
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(this, goog.debug.Error);
+  } else {
+    var b = Error().stack;
+    b && (this.stack = b);
+  }
   a && (this.message = String(a));
 };
 goog.inherits(goog.debug.Error, Error);
@@ -1334,9 +1351,6 @@ goog.array.equals = function(a, b, c) {
     }
   }
   return!0;
-};
-goog.array.compare = function(a, b, c) {
-  return goog.array.equals(a, b, c);
 };
 goog.array.compare3 = function(a, b, c) {
   c = c || goog.array.defaultCompare;

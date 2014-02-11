@@ -1,7 +1,6 @@
 outputDirectory: build
 javascript:
   sourceDirectories:
-  - closure/library/
   - src/
   entryPoints:
   - cron.js
