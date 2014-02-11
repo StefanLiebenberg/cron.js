@@ -1,36 +1,55 @@
 goog.provide('sage.cron.Job');
+goog.require('goog.asserts');
 
 
 
 /**
  * @constructor
- * @param {!string|!sage.cron.Spec} spec the interval specification.
- * @param {!Function} block the function associated with this cron.
+ * @param {!string|!sage.cron.Spec} spec
+ *        The interval specification.
+ * @param {!Function} block
+ *        The function associated with this cron.
  */
 sage.cron.Job = function(spec, block) {
-  if (typeof spec === 'string') {
-    spec = new sage.cron.Spec(spec);
-  }
-
-  /**
-   * @type {!sage.cron.Spec}
-   * @private
-   */
-  this.cronspec_ = spec;
-
-  /**
-   * @type {!Function}
-   * @private
-   */
+  this.cronspec_ = sage.cron.Job.toSpec_(spec);
   this.block_ = block;
-
-  /**
-   * @type {?Date}
-   */
   this.last_at = null;
-
   this.calcNextAt_();
+};
 
+
+/**
+ * @private
+ * @type {!sage.cron.Spec}
+ */
+sage.cron.Job.prototype.cronspec_;
+
+
+/**
+ * @private
+ * @type {!Function}
+ */
+sage.cron.Job.prototype.block_;
+
+
+/**
+ * @type {?Date}
+ */
+sage.cron.Job.prototype.last_at;
+
+
+/**
+ * @private
+ * @param {!string|!sage.cron.Spec} spec
+ * @return {!sage.cron.Spec}
+ */
+sage.cron.Job.toSpec_ = function(spec) {
+  if (goog.isString(spec)) {
+    return new sage.cron.Spec(spec);
+  } else {
+    goog.asserts.assert(spec instanceof sage.cron.Spec);
+    return spec;
+  }
 };
 
 
@@ -41,10 +60,12 @@ sage.cron.Job = function(spec, block) {
 sage.cron.Job.prototype.calcNextAt_ = function() {
   /** @type {Date} */
   var now = new Date();
+
   /** @type {Date|undefined} */
   var temp;
+
   if (this.last_at) {
-    temp = /** @type {Date} */ this.cronspec_.next(this.last_at);
+    temp = /** @type {Date} */ (this.cronspec_.next(this.last_at));
     while (temp < now) {
       temp = this.cronspec_.next(temp);
     }
@@ -66,7 +87,7 @@ sage.cron.Job.prototype.getNextTimeout = function(date) {
     date = new Date();
   }
 
-  if (! this.next_at) {
+  if (!this.next_at) {
     this.calcNextAt_();
   }
 

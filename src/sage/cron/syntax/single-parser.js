@@ -1,26 +1,22 @@
 goog.provide('sage.cron.syntax.SingleParser');
-goog.require('sage.util.StringParser');
+goog.require('sage.cron.syntax.AbstractParser');
 
 
 
 /**
  * @constructor
- * @extends {sage.util.StringParser}
- * @param {string} allow Allowable string in parser.
+ * @extends {sage.cron.syntax.AbstractParser}
+ * @param {sage.cron.SpecParser} parser
  */
-sage.cron.syntax.SingleParser = function(allow) {
-  var regexp = new RegExp('^' + allow + '$');
-  goog.base(this, regexp);
+sage.cron.syntax.SingleParser = function(parser) {
+  goog.base(this, parser, new RegExp('^' + parser.allow + '$'));
 };
-goog.inherits(sage.cron.syntax.SingleParser, sage.util.StringParser);
+goog.inherits(sage.cron.syntax.SingleParser, sage.cron.syntax.AbstractParser);
 
 
-/**
- * @param {string} spec the specification string.
- * @param {sage.cron.SpecParser} parser the spec_parser.
- * @return {Array.<number>} return an array of numbers.
- */
-sage.cron.syntax.SingleParser.prototype.parseInternal = function(spec, parser) {
-  var at = parseInt(spec, 10) - parser.range.from;
-  return [parser.range.valueAt(at)];
+/** @override */
+sage.cron.syntax.SingleParser.prototype.parse = function(spec) {
+  var range = this.parser.range;
+  var at = parseInt(spec, 10) - range.from;
+  return [range.valueAt(at)];
 };

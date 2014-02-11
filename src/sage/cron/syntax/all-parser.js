@@ -1,33 +1,21 @@
 goog.provide('sage.cron.syntax.AllParser');
-goog.require('sage.util.StringParser');
+goog.require('sage.cron.syntax.AbstractParser');
 
 
 
 /**
  * @constructor
- * @extends {sage.util.StringParser}
+ * @extends { sage.cron.syntax.AbstractParser}
+ * @param {sage.cron.SpecParser} parser the spec_parser.
  */
-sage.cron.syntax.AllParser = function() {
-  var regexp = /^\*$/;
-  goog.base(this, regexp);
+sage.cron.syntax.AllParser = function(parser) {
+  goog.base(this, parser, /^\*$/);
+
 };
-goog.inherits(sage.cron.syntax.AllParser, sage.util.StringParser);
+goog.inherits(sage.cron.syntax.AllParser, sage.cron.syntax.AbstractParser);
 
 
-/**
- * @override {sage.util.StringParser.prototype.parse}
- * @param {string} spec the specification string.
- * @param {sage.cron.SpecParser} parser the spec_parser.
- * @return {Array.<number>} return an array of numbers.
- */
-sage.cron.syntax.AllParser.prototype.parse;
-
-
-/**
- * @param {string} spec the specification string.
- * @param {sage.cron.SpecParser} parser the spec_parser.
- * @return {Array.<number>} return an array of numbers.
- */
-sage.cron.syntax.AllParser.prototype.parseInternal = function(spec, parser) {
-  return parser.range.getValues(null, null);
+/** @override */
+sage.cron.syntax.AllParser.prototype.parse = function(spec) {
+  return this.parser.range.getValues(null, null);
 };

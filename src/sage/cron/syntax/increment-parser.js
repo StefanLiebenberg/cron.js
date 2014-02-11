@@ -1,32 +1,31 @@
 goog.provide('sage.cron.syntax.IncrementParser');
-goog.require('sage.util.StringParser');
+goog.require('sage.cron.syntax.AbstractParser');
 
 
 
 /**
  * @constructor
- * @extends {sage.util.StringParser}
- * @param {string} allow Allowable string in parser.
+ * @extends {sage.cron.syntax.AbstractParser}
+ * @param {sage.cron.SpecParser} parser
  */
-sage.cron.syntax.IncrementParser = function(allow) {
-  var regexp = new RegExp('^[^\/]+\/' + allow + '$');
-  goog.base(this, regexp);
+sage.cron.syntax.IncrementParser = function(parser) {
+  goog.base(this, parser, new RegExp('^[^\/]+\/' + parser.allow + '$'));
 };
-goog.inherits(sage.cron.syntax.IncrementParser, sage.util.StringParser);
-
+goog.inherits(sage.cron.syntax.IncrementParser,
+              sage.cron.syntax.AbstractParser);
 
 /**
- * @param {string} spec the specification string.
- * @param {sage.cron.SpecParser} parser the spec_parser.
- * @return {Array.<number>} return an array of numbers.
+ *  @type {sage.cron.SpecParser}
  */
-sage.cron.syntax.IncrementParser.prototype.parseInternal =
-    function(spec, parser) {
+sage.cron.syntax.IncrementParser.prototype.parser;
 
-  var parts = /** @type {Array.<string>} */ spec.split('/');
-  var range = /** @type {Array.<number>} */parser.parse(parts[0]);
-  var increment = /** @type {number} */ parseInt(parts[1], 10);
-  /** @type {Array.<number>} */
+
+/** @override */
+sage.cron.syntax.IncrementParser.prototype.parse = function(spec) {
+  var parts = /** @type {Array.<string>} */ (spec.split('/'));
+  var range = /** @type {Array.<number>} */ (this.parser.parse(parts[0]));
+  var increment = /** @type {number} */ (parseInt(parts[1], 10));
+  /** @type {!Array.<number>} */
   var result = [];
   for (var i = 0, l = range.length; i < l; i += increment) {
     result.push(range[i]);

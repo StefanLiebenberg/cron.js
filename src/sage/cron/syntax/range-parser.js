@@ -1,37 +1,24 @@
 goog.provide('sage.cron.syntax.RangeParser');
-goog.require('sage.util.StringParser');
+goog.require('sage.cron.syntax.AbstractParser');
 
 
 
 /**
  * @constructor
- * @extends {sage.util.StringParser}
- * @param {string} allow Allowable string in parser.
+ * @extends { sage.cron.syntax.AbstractParser}
+ * @param {sage.cron.SpecParser} parser
  */
-sage.cron.syntax.RangeParser = function(allow) {
-  var regexp = new RegExp('^' + allow + '-' + allow + '$');
-  goog.base(this, regexp);
+sage.cron.syntax.RangeParser = function(parser) {
+  goog.base(this, parser,
+            new RegExp('^' + parser.allow + '-' + parser.allow + '$'));
 };
-goog.inherits(sage.cron.syntax.RangeParser, sage.util.StringParser);
+goog.inherits(sage.cron.syntax.RangeParser, sage.cron.syntax.AbstractParser);
 
 
-/**
- * @override {sage.util.StringParser.prototype.parse}
- * @param {string} spec the specification string.
- * @param {sage.cron.SpecParser} parser the spec_parser.
- * @return {Array.<number>} return an array of numbers.
- */
-sage.cron.syntax.RangeParser.prototype.parse;
-
-
-/**
- * @param {string} spec the specification string.
- * @param {sage.cron.SpecParser} parser the spec_parser.
- * @return {Array.<number>} return an array of numbers.
- */
-sage.cron.syntax.RangeParser.prototype.parseInternal = function(spec, parser) {
+/** @override */
+sage.cron.syntax.RangeParser.prototype.parse = function(spec) {
   var parts = spec.split('-');
-  var startAt = parseInt(parts[0], 10) - parser.range.from;
-  var endAt = parseInt(parts[1], 10) - parser.range.from;
-  return parser.range.getValues(null, null).slice(startAt, endAt + 1);
+  var startAt = parseInt(parts[0], 10) - this.parser.range.from;
+  var endAt = parseInt(parts[1], 10) - this.parser.range.from;
+  return this.parser.range.getValues(null, null).slice(startAt, endAt + 1);
 };

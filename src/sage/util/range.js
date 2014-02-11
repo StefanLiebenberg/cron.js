@@ -52,15 +52,15 @@ sage.util.Range.prototype.indexOf = function(value) {
 /**
  * @param {?number} from the start point.
  * @param {?number} to the end point.
- * @return {Array.<number>} returns an array of all values.
+ * @return {!Array.<number>} returns an array of all values.
  */
 sage.util.Range.prototype.getValues = function(from, to) {
   if (typeof from !== 'number') {
-    from = /** @type {number} */ this.from;
+    from = /** @type {number} */ (this.from);
   }
 
   if (typeof to !== 'number') {
-    to = /** @type {number} */ this.to;
+    to = /** @type {number} */ (this.to);
   }
   return this.getValuesInternal(from, to);
 };
@@ -69,7 +69,7 @@ sage.util.Range.prototype.getValues = function(from, to) {
 /**
  * @param {number} from the start point.
  * @param {number} to the end point.
- * @return {Array.<number>} returns an array of all values.
+ * @return {!Array.<number>} returns an array of all values.
  */
 sage.util.Range.prototype.getValuesInternal = function(from, to) {
   var length, result;
@@ -80,7 +80,7 @@ sage.util.Range.prototype.getValuesInternal = function(from, to) {
     throw new Error(str);
   }
 
-  length = /** @type {number} */ 1 + to - from;
+  length = /** @type {number} */ (1 + to - from);
   result = new Array(length);
   if (length > 0) while (length--) {
     result[length] = from + length;

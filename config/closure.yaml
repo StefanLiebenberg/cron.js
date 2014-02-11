@@ -1,0 +1,8 @@
+outputDirectory: build
+javascript:
+  sourceDirectories:
+  - src/
+  entryPoints:
+  - cron.js
+  testDirectories:
+  - tests/

@@ -23,7 +23,7 @@ sage.cron.Spec = function(spec) {
   /** @type {string} */
   this.spec = spec;
 
-  var parts = /** @type {Array} */ spec.split(' ');
+  var parts = /** @type {Array.<string>} */ (spec.split(' '));
 
   if (parts.length !== 6) {
     /** @type {string} */
