@@ -1,8 +1,6 @@
 goog.provide('slieb.util.RangeParser');
 goog.require('goog.array');
 goog.require('slieb.util.Range');
-goog.require('slieb.util.array');
-
 
 
 /**
@@ -10,9 +8,9 @@ goog.require('slieb.util.array');
  * @param {number} from the start point.
  * @param {number} to the end point.
  */
-slieb.util.RangeParser = function(from, to) {
-  this.range = new slieb.util.Range(from, to);
-  this.parsers = [];
+slieb.util.RangeParser = function (from, to) {
+    this.range = new slieb.util.Range(from, to);
+    this.parsers = [];
 };
 
 
@@ -28,24 +26,23 @@ slieb.util.RangeParser.prototype.parsers;
  * @param {string} string
  * @return {!Array.<number>}
  */
-slieb.util.RangeParser.prototype.parse = function(string) {
-  var len = this.parsers.length;
+slieb.util.RangeParser.prototype.parse = function (string) {
+    var len = this.parsers.length;
 
-  /** @type {!Array.<number>} */
-  var result = [];
+    /** @type {!Array.<number>} */
+    var result = [];
 
-  /** @type {slieb.cron.syntax.AbstractParser} */
-  var parser;
+    /** @type {slieb.cron.syntax.AbstractParser} */
+    var parser;
 
-  for (var i = 0; i < len; i++) {
-    parser = this.parsers[i];
-    if (parser.test(string)) {
-      result = parser.parse(string);
-      slieb.util.array.uniq(result);
-      result.sort(function(a, b) {return a - b});
-      break;
+    for (var i = 0; i < len; i++) {
+        parser = this.parsers[i];
+        if (parser.test(string)) {
+            result = parser.parse(string);
+            goog.array.removeDuplicates(result);
+            goog.array.sort(result);
+            break;
+        }
     }
-  }
-
-  return result;
+    return result;
 };
