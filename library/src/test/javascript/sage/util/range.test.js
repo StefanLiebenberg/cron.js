@@ -1,11 +1,11 @@
-goog.provide('tests.sage.util.Range');
+goog.provide('tests.slieb.util.Range');
 goog.require('goog.testing.jsunit');
-goog.require('sage.util.Range');
+goog.require('slieb.util.Range');
 
 var range;
 
 function setUp() {
-  range = new sage.util.Range(50, 99);
+  range = new slieb.util.Range(50, 99);
 }
 
 function tearDown() {
@@ -13,7 +13,7 @@ function tearDown() {
 }
 
 function testConstructor() {
-  assertTrue(range instanceof sage.util.Range);
+  assertTrue(range instanceof slieb.util.Range);
   assertEquals(range.from, 50);
   assertEquals(range.to, 99);
 }

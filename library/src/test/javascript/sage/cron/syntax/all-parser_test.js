@@ -1,11 +1,11 @@
-goog.provide('tests.sage.cron.syntax.AllParser');
+goog.provide('tests.slieb.cron.syntax.AllParser');
 goog.require('goog.testing.jsunit');
-goog.require('sage.cron.syntax.AllParser');
+goog.require('slieb.cron.syntax.AllParser');
 
 var all_parser;
 
 function setUp() {
-  all_parser = new sage.cron.syntax.AllParser();
+  all_parser = new slieb.cron.syntax.AllParser();
 }
 
 function tearDown() {
@@ -13,7 +13,7 @@ function tearDown() {
 }
 
 function testConstructor() {
-  assertTrue(all_parser instanceof sage.cron.syntax.AllParser);
+  assertTrue(all_parser instanceof slieb.cron.syntax.AllParser);
 }
 
 function testAllParser() {}

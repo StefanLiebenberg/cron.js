@@ -1,5 +1,5 @@
-goog.provide('tests.sage.cron.Job');
-goog.require('sage.cron.Job');
+goog.provide('tests.slieb.cron.Job');
+goog.require('slieb.cron.Job');
 goog.require('goog.testing.jsunit');
 
 function testJob () {};

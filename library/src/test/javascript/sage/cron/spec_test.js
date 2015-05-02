@@ -1,12 +1,12 @@
-goog.provide('tests.sage.cron.Spec');
+goog.provide('tests.slieb.cron.Spec');
 goog.require('goog.testing.jsunit');
-goog.require('sage.cron.Spec');
-goog.require('sage.util.Range');
+goog.require('slieb.cron.Spec');
+goog.require('slieb.util.Range');
 
 
 function assertSpecArraysEquals(specA, specB) {
-  assertTrue(specA instanceof sage.cron.Spec);
-  assertTrue(specB instanceof sage.cron.Spec);
+  assertTrue(specA instanceof slieb.cron.Spec);
+  assertTrue(specB instanceof slieb.cron.Spec);
 
   assertArrayEquals(specA.seconds, specB.seconds);
   assertArrayEquals(specA.minutes, specB.minutes);
@@ -18,19 +18,19 @@ function assertSpecArraysEquals(specA, specB) {
 
 
 function testSpec() {
-  var spec = new sage.cron.Spec('@daily');
+  var spec = new slieb.cron.Spec('@daily');
 
   var seconds_array = [0];
   var minutes_array = [0];
   var hours_array = [0];
 
-  var days_range = new sage.util.Range(1, 31);
+  var days_range = new slieb.util.Range(1, 31);
   var days_array = days_range.getValues();
 
-  var months_range = new sage.util.Range(1, 12);
+  var months_range = new slieb.util.Range(1, 12);
   var months_array = months_range.getValues();
 
-  var weekdays_range = new sage.util.Range(1, 7);
+  var weekdays_range = new slieb.util.Range(1, 7);
   var weekdays_array = weekdays_range.getValues();
 
   assertArrayEquals(seconds_array, spec.seconds);
@@ -42,8 +42,8 @@ function testSpec() {
 }
 
 function testsSpecParse() {
-  var specA = new sage.cron.Spec("@daily");
-  var specB = sage.cron.Spec.parse("@daily");
+  var specA = new slieb.cron.Spec("@daily");
+  var specB = slieb.cron.Spec.parse("@daily");
   assertSpecArraysEquals(specA, specB);
 };
 
@@ -62,7 +62,7 @@ function testSpecNext() {
   actual = [];
 
 
-  var spec = new sage.cron.Spec('0 0 0 29 2 *');
+  var spec = new slieb.cron.Spec('0 0 0 29 2 *');
   var a = 946677600000; // jan 1 2000
   var b = 1577829600000; // jan 1 2020
 
@@ -92,7 +92,7 @@ function testIssue01() {
   expected.setSeconds(0);
 
   var spec =
-    new sage.cron.Spec("* * 20 * * *");
+    new slieb.cron.Spec("* * 20 * * *");
 
   var next = spec.next(now);
 

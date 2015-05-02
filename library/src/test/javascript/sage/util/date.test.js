@@ -1,6 +1,6 @@
-goog.provide('tests.sage.util.date');
+goog.provide('tests.slieb.util.date');
 goog.require('goog.testing.jsunit');
-goog.require('sage.util.date');
+goog.require('slieb.util.date');
 
 
 function testAddTime() {
@@ -12,10 +12,10 @@ function testAddTime() {
 
   assertEquals(a, date.getTime());
 
-  sage.util.date.addTime(date, time);
+  slieb.util.date.addTime(date, time);
   assertEquals(b, date.getTime());
 
-  sage.util.date.addTime(date, -time);
+  slieb.util.date.addTime(date, -time);
   assertEquals(a, date.getTime());
 }
 
@@ -28,10 +28,10 @@ function testAddSeconds() {
 
   assertEquals(a, date.getTime());
 
-  sage.util.date.addSeconds(date, time);
+  slieb.util.date.addSeconds(date, time);
   assertEquals(b, date.getTime());
 
-  sage.util.date.addSeconds(date, -time);
+  slieb.util.date.addSeconds(date, -time);
   assertEquals(a, date.getTime());
 }
 
@@ -45,10 +45,10 @@ function testAddMinutes() {
 
   assertEquals(a, date.getTime());
 
-  sage.util.date.addMinutes(date, time);
+  slieb.util.date.addMinutes(date, time);
   assertEquals(b, date.getTime());
 
-  sage.util.date.addMinutes(date, -time);
+  slieb.util.date.addMinutes(date, -time);
   assertEquals(a, date.getTime());
 }
 
@@ -62,10 +62,10 @@ function testAddHours() {
 
   assertEquals(a, date.getTime());
 
-  sage.util.date.addHours(date, time);
+  slieb.util.date.addHours(date, time);
   assertEquals(b, date.getTime());
 
-  sage.util.date.addHours(date, -time);
+  slieb.util.date.addHours(date, -time);
   assertEquals(a, date.getTime());
 }
 
@@ -78,10 +78,10 @@ function testAddDays() {
 
   assertEquals(a, date.getTime());
 
-  sage.util.date.addDays(date, time);
+  slieb.util.date.addDays(date, time);
   assertEquals(b, date.getTime());
 
-  sage.util.date.addDays(date, -time);
+  slieb.util.date.addDays(date, -time);
   assertEquals(a, date.getTime());
 }
 
@@ -94,10 +94,10 @@ function testAddMonths() {var a, b, dateA, dateB;
 
   assertEquals(a, date.getTime());
 
-  sage.util.date.addMonths(date, time);
+  slieb.util.date.addMonths(date, time);
   assertEquals(b, date.getTime());
 
-  sage.util.date.addMonths(date, -time);
+  slieb.util.date.addMonths(date, -time);
   assertEquals(a, date.getTime());
 }
 
@@ -110,9 +110,9 @@ function testAddYears() {var a, b, dateA, dateB;
 
   assertEquals(a, date.getTime());
 
-  sage.util.date.addYears(date, time);
+  slieb.util.date.addYears(date, time);
   assertEquals(b, date.getTime());
 
-  sage.util.date.addYears(date, -time);
+  slieb.util.date.addYears(date, -time);
   assertEquals(a, date.getTime());
 }

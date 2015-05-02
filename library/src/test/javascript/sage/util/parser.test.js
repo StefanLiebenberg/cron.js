@@ -1,12 +1,12 @@
-goog.provide('tests.sage.util.Parser');
+goog.provide('tests.slieb.util.Parser');
 goog.require('goog.testing.jsunit');
-goog.require('sage.util.StringParser');
+goog.require('slieb.util.StringParser');
 
 var parser, string_parser, parser_regexp;
 
 function setUp() {
-//  parser = new sage.util.Parser();
-  string_parser = new sage.util.StringParser(parser_regexp);
+//  parser = new slieb.util.Parser();
+  string_parser = new slieb.util.StringParser(parser_regexp);
   parser_regexp = /foo/g;
 }
 
@@ -18,7 +18,7 @@ function tearDown() {
 
 function testParserConstructor() {
 //  assertTrue('Instance must be non-null and have the expected class',
-//      parser instanceof sage.util.Parser);
+//      parser instanceof slieb.util.Parser);
 }
 
 function testParserParsing() {
@@ -30,9 +30,9 @@ function testParserParsing() {
 
 function testStringParserConstructor() {
 //  assertTrue('Instance must be non-null and have the expected class',
-//      string_parser instanceof sage.util.Parser);
+//      string_parser instanceof slieb.util.Parser);
   assertTrue('Instance must be non-null and have the expected class',
-      string_parser instanceof sage.util.StringParser);
+      string_parser instanceof slieb.util.StringParser);
 }
 
 function testStringParserTesting() {

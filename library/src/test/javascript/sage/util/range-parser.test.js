@@ -1,7 +1,7 @@
 goog.provide('tests.util.RangeParser');
 goog.require('goog.testing.jsunit');
-goog.require('sage.util.RangeParser');
-goog.require('sage.util.StringParser');
+goog.require('slieb.util.RangeParser');
+goog.require('slieb.util.StringParser');
 
 var range_parser;
 var parser_001;
@@ -9,10 +9,10 @@ var parser_002;
 var parser_003;
 
 function setUp() {
-  range_parser = new sage.util.RangeParser(10, 20);
-  parser_001 = new sage.util.StringParser(/foo1/);
-  parser_002 = new sage.util.StringParser(/foo2/);
-  parser_003 = new sage.util.StringParser(/foo3/);
+  range_parser = new slieb.util.RangeParser(10, 20);
+  parser_001 = new slieb.util.StringParser(/foo1/);
+  parser_002 = new slieb.util.StringParser(/foo2/);
+  parser_003 = new slieb.util.StringParser(/foo3/);
 }
 
 function tearDown() {
@@ -23,8 +23,8 @@ function tearDown() {
 }
 
 function testConstructor() {
-  assertTrue(range_parser instanceof sage.util.RangeParser);
-//  assertTrue(range_parser instanceof sage.util.Parser);
+  assertTrue(range_parser instanceof slieb.util.RangeParser);
+//  assertTrue(range_parser instanceof slieb.util.Parser);
 }
 
 function addParsers() {

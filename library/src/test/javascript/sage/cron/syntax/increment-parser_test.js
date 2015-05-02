@@ -1,5 +1,5 @@
-goog.provide('tests.sage.cron.syntax.IncrementParser');
+goog.provide('tests.slieb.cron.syntax.IncrementParser');
 goog.require('goog.testing.jsunit');
-goog.require('sage.cron.syntax.IncrementParser');
+goog.require('slieb.cron.syntax.IncrementParser');
 
 function testIncrementParser() {}
