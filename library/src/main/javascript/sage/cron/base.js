@@ -19,7 +19,7 @@ goog.require('sage.util.RangeParser');
  * @extends {sage.util.RangeParser}
  */
 sage.cron.SpecParser = function(from, to, allowable_string) {
-  goog.base(this, from, to);
+  sage.cron.SpecParser.base(this, 'constructor', from, to);
 
   /** @type {string} */
   this.allow = allowable_string;
@@ -43,7 +43,7 @@ goog.inherits(sage.cron.SpecParser, sage.util.RangeParser);
  * @param {Object.<number>} aliases
  */
 sage.cron.AliasSpecParser = function(from, to, allowable_string, aliases) {
-  goog.base(this, from, to, allowable_string);
+  sage.cron.AliasSpecParser.base(this, 'constructor', from, to, allowable_string);
   this.aliasMap = new goog.structs.Map(aliases);
   var keys = this.aliasMap.getKeys();
   this.aliasRegEx = new RegExp('(' + keys.join('|') + ')', 'g');
@@ -79,5 +79,5 @@ sage.cron.AliasSpecParser.prototype.resolveAliases = function(spec) {
  * @override
  */
 sage.cron.AliasSpecParser.prototype.parse = function(spec) {
-  return goog.base(this, 'parse', this.resolveAliases(spec));
+  return sage.cron.AliasSpecParser.base(this, 'parse', this.resolveAliases(spec));
 };

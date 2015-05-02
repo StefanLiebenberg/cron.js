@@ -21,8 +21,12 @@
                 <extensions>true</extensions>
                 <configuration>
                     <sourceDirectories>
+                        <file>${project.build.directory}/unpacked-dependencies</file>
                         <file>${basedir}/src/main/javascript</file>
                     </sourceDirectories>
+                    <testDirectories>
+                        <directory>${basedir}/src/test/javascript</directory>
+                    </testDirectories>
                 </configuration>
             </plugin>
         </plugins>

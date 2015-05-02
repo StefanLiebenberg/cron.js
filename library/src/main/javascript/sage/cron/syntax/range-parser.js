@@ -9,7 +9,7 @@ goog.require('sage.cron.syntax.AbstractParser');
  * @param {sage.cron.SpecParser} parser
  */
 sage.cron.syntax.RangeParser = function(parser) {
-  goog.base(this, parser,
+  sage.cron.syntax.RangeParser.base(this, 'constructor', parser,
             new RegExp('^' + parser.allow + '-' + parser.allow + '$'));
 };
 goog.inherits(sage.cron.syntax.RangeParser, sage.cron.syntax.AbstractParser);
