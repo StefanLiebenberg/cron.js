@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.slieb.javascript</groupId>
+    <artifactId>cronjs</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>library</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <dep.maven>3.3.1</dep.maven>
+        <dep.maven-artifact-manager>2.2.1</dep.maven-artifact-manager>
+        <dep.maven-plugin-tools>3.4</dep.maven-plugin-tools>
+        <dep.maven-dependency-plugin>2.8</dep.maven-dependency-plugin>
+        <dep.maven-plugin-testing-harness>3.3.0</dep.maven-plugin-testing-harness>
+        <dep.kute>0.4</dep.kute>
+        <dep.dependency-calculator>0.3</dep.dependency-calculator>
+
+        <dep.mojo-executor>2.2.0</dep.mojo-executor>
+        <dep.guice>4.0-beta5</dep.guice>
+        <dep.guava>18.0</dep.guava>
+        <dep.rhino>1.7R4</dep.rhino>
+        <dep.commons-io>1.3.2</dep.commons-io>
+
+        <plugin.jspackage>1.0-SNAPSHOT</plugin.jspackage>
+
+    </properties>
+
+    <prerequisites>
+        <maven>${dep.maven}</maven>
+    </prerequisites>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slieb.jspackage</groupId>
+            <artifactId>jspackage-closure-library</artifactId>
+            <version>${plugin.jspackage}</version>
+        </dependency>
+    </dependencies>
+
+
+</project>
