@@ -30,29 +30,29 @@ slieb.cron.SpecDayParser =
 /** @type {slieb.cron.SpecParser} */
 slieb.cron.SpecMonthParser =
     new slieb.cron.AliasSpecParser(1, 12, '(([0]?[1-9])|([1][0-2]))', {
-      'jan': 1,
-      'feb': 2,
-      'mar': 3,
-      'apr': 4,
-      'may': 5,
-      'jun': 6,
-      'jul': 7,
-      'aug': 8,
-      'sep': 9,
-      'oct': 10,
-      'nov': 11,
-      'dec': 12
+        'jan': 1,
+        'feb': 2,
+        'mar': 3,
+        'apr': 4,
+        'may': 5,
+        'jun': 6,
+        'jul': 7,
+        'aug': 8,
+        'sep': 9,
+        'oct': 10,
+        'nov': 11,
+        'dec': 12
     });
 
 
 /** @type {slieb.cron.SpecParser} */
 slieb.cron.SpecWeekdayParser =
     new slieb.cron.AliasSpecParser(1, 7, '([0]?[1-7])', {
-      'sun': 1,
-      'mon': 2,
-      'tue': 3,
-      'wed': 4,
-      'thu': 5,
-      'fri': 6,
-      'sat': 7
+        'sun': 1,
+        'mon': 2,
+        'tue': 3,
+        'wed': 4,
+        'thu': 5,
+        'fri': 6,
+        'sat': 7
     });

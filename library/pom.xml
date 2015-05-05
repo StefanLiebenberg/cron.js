@@ -9,29 +9,70 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>js-library</packaging>
-
     <artifactId>cronjs-library</artifactId>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile-java</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.slieb.jspackage</groupId>
                 <artifactId>jspackage-maven-plugin</artifactId>
                 <version>${plugin.jspackage}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <sourceDirectories>
-                        <file>${project.build.directory}/unpacked-dependencies</file>
-                        <file>${basedir}/src/main/javascript</file>
-                    </sourceDirectories>
+                    <sources>
+                        <source>${project.build.directory}/unpacked-dependencies</source>
+                        <source>${basedir}/src/main/javascript</source>
+                    </sources>
                     <testDirectories>
                         <directory>${basedir}/src/test/javascript</directory>
                     </testDirectories>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>compile-js</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <inputs>
+                                <input>cron.js</input>
+                            </inputs>
+                            <outputFile>${project.build.directory}/compile.cc.js</outputFile>
+                            <guiceModule>slieb.CronModule</guiceModule>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.slieb.jspackage</groupId>
+            <artifactId>jspackage-maven-plugin</artifactId>
+            <version>${plugin.jspackage}</version>
+        </dependency>
+    </dependencies>
 
 
 </project>

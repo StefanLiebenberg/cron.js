@@ -4,16 +4,17 @@ goog.require('slieb.cron.syntax.AllParser');
 
 var all_parser;
 
-function setUp() {
-  all_parser = new slieb.cron.syntax.AllParser();
-}
+goog.exportSymbol("setUp", function setUp() {
+    all_parser = new slieb.cron.syntax.AllParser();
+});
 
-function tearDown() {
-  delete all_parser;
-}
+goog.exportSymbol("tearDown", function () {
+    delete all_parser;
+});
 
 function testConstructor() {
-  assertTrue(all_parser instanceof slieb.cron.syntax.AllParser);
+    assertTrue(all_parser instanceof slieb.cron.syntax.AllParser);
 }
 
-function testAllParser() {}
+function testAllParser() {
+}

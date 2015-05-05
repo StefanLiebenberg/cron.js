@@ -1,5 +1,4 @@
 goog.provide('slieb.util.date');
-goog.require('slieb.util.array');
 
 
 /**
@@ -7,10 +6,10 @@ goog.require('slieb.util.array');
  * @param {number} time the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */
-slieb.util.date.addTime = function(date, time) {
-  var current = date.getTime();
-  date.setTime(current + time);
-  return date;
+slieb.util.date.addTime = function (date, time) {
+    var current = date.getTime();
+    date.setTime(current + time);
+    return date;
 };
 
 
@@ -19,10 +18,10 @@ slieb.util.date.addTime = function(date, time) {
  * @param {number} seconds the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */
-slieb.util.date.addSeconds = function(date, seconds) {
-  var current = date.getSeconds();
-  date.setSeconds(current + seconds);
-  return date;
+slieb.util.date.addSeconds = function (date, seconds) {
+    var current = date.getSeconds();
+    date.setSeconds(current + seconds);
+    return date;
 };
 
 
@@ -31,10 +30,10 @@ slieb.util.date.addSeconds = function(date, seconds) {
  * @param {number} minutes the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */
-slieb.util.date.addMinutes = function(date, minutes) {
-  var current = date.getMinutes();
-  date.setMinutes(current + minutes);
-  return date;
+slieb.util.date.addMinutes = function (date, minutes) {
+    var current = date.getMinutes();
+    date.setMinutes(current + minutes);
+    return date;
 };
 
 
@@ -43,11 +42,11 @@ slieb.util.date.addMinutes = function(date, minutes) {
  * @param {number} hours the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */
-slieb.util.date.addHours = function(date, hours) {
-  /** @type {number} */
-  var current = date.getHours();
-  date.setHours(current + hours);
-  return date;
+slieb.util.date.addHours = function (date, hours) {
+    /** @type {number} */
+    var current = date.getHours();
+    date.setHours(current + hours);
+    return date;
 };
 
 
@@ -56,10 +55,10 @@ slieb.util.date.addHours = function(date, hours) {
  * @param {number} days the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */
-slieb.util.date.addDays = function(date, days) {
-  var current = date.getDate();
-  date.setDate(current + days);
-  return date;
+slieb.util.date.addDays = function (date, days) {
+    var current = date.getDate();
+    date.setDate(current + days);
+    return date;
 };
 
 
@@ -68,10 +67,10 @@ slieb.util.date.addDays = function(date, days) {
  * @param {number} months the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */
-slieb.util.date.addMonths = function(date, months) {
-  var current = date.getMonth();
-  date.setMonth(current + months);
-  return date;
+slieb.util.date.addMonths = function (date, months) {
+    var current = date.getMonth();
+    date.setMonth(current + months);
+    return date;
 };
 
 
@@ -80,8 +79,8 @@ slieb.util.date.addMonths = function(date, months) {
  * @param {number} years the amount of milleseconds to add to date.
  * @return {Date} returns the modified date instance.
  */
-slieb.util.date.addYears = function(date, years) {
-  var current = date.getFullYear();
-  date.setFullYear(current + years);
-  return date;
+slieb.util.date.addYears = function (date, years) {
+    var current = date.getFullYear();
+    date.setFullYear(current + years);
+    return date;
 };
