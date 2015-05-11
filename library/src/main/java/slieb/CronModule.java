@@ -11,6 +11,7 @@ import com.google.javascript.jscomp.StrictWarningsGuard;
 import org.slieb.tools.jspackage.internal.OptionsHandler;
 
 public class CronModule extends AbstractModule {
+
     public void configure() {
         Multibinder.newSetBinder(binder(), OptionsHandler.class)
                 .addBinding()
@@ -23,7 +24,6 @@ public class CronModule extends AbstractModule {
         CompilationLevel level = CompilationLevel.ADVANCED_OPTIMIZATIONS;
         return (opts -> {
             level.setOptionsForCompilationLevel(opts);
-//            level.setDebugOptionsForCompilationLevel(opts);
             level.setTypeBasedOptimizationOptions(opts);
             opts.addWarningsGuard(new StrictWarningsGuard());
         });

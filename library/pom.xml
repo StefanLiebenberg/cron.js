@@ -45,6 +45,9 @@
                     <testDirectories>
                         <directory>${basedir}/src/test/javascript</directory>
                     </testDirectories>
+		    <componentTestSources>
+                      <directory>${basedir}/src/test/javascript</directory>
+                    </componentTestSources>
                 </configuration>
                 <executions>
                     <execution>
